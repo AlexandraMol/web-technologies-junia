@@ -3,7 +3,7 @@ import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
 import { useEffect } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Route as booksRoute } from '../../routes/books'
+import { Route as booksRoute } from '../../../routes/books'
 
 interface BookDetailsProps {
   id: string
