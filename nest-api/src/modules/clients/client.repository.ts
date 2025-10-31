@@ -7,6 +7,7 @@ import {
   ClientWithSalesCountModel,
   CreateClientModel,
   FilterClientsModel,
+  UpdateClientModel,
 } from './client.model';
 import { SaleEntity } from '../sales/sale.entity';
 
@@ -106,20 +107,20 @@ export class ClientRepository {
     return this.clientRepository.save(this.clientRepository.create(client));
   }
 
-  //   public async updateBook(
-  //     id: string,
-  //     book: UpdateBookModel,
-  //   ): Promise<BookModel | undefined> {
-  //     const oldBook = await this.bookRepository.findOne({
-  //       where: { id: id as BookId },
-  //     });
+  public async updateClient(
+    id: string,
+    client: UpdateClientModel,
+  ): Promise<ClientModel | undefined> {
+    const oldClient = await this.clientRepository.findOne({
+      where: { id: id as ClientId },
+    });
 
-  //     if (!oldBook) {
-  //       return undefined;
-  //     }
+    if (!oldClient) {
+      return undefined;
+    }
 
-  //     await this.bookRepository.update(id, book);
-  //   }
+    await this.clientRepository.update(id, client);
+  }
 
   public async deleteClient(id: string): Promise<void> {
     await this.clientRepository.delete(id);

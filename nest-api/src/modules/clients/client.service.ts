@@ -5,6 +5,7 @@ import {
   CreateClientModel,
   FilterClientsModel,
   GetClientsWithSalesCountModel,
+  UpdateClientModel,
 } from './client.model';
 
 @Injectable()
@@ -52,17 +53,17 @@ export class ClientService {
     return this.clientRepository.createClient(client);
   }
 
-  //   public async updateBook(
-  //     id: string,
-  //     book: UpdateBookModel,
-  //   ): Promise<BookModel | undefined> {
-  //     const oldBook = await this.getBookById(id);
-  //     if (!oldBook) {
-  //       return undefined;
-  //     }
+  public async updateClient(
+    id: string,
+    client: UpdateClientModel,
+  ): Promise<ClientModel | undefined> {
+    const oldClient = await this.getClientById(id);
+    if (!oldClient) {
+      return undefined;
+    }
 
-  //     return this.bookRepository.updateBook(id, book);
-  //   }
+    return this.clientRepository.updateClient(id, client);
+  }
 
   public async deleteClient(id: string): Promise<void> {
     await this.clientRepository.deleteClient(id);

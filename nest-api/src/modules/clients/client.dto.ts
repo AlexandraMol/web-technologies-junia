@@ -16,21 +16,23 @@ export class CreateClientDto {
   pictureUrl?: string;
 }
 
-// export class UpdateBookDto {
-//   @IsString()
-//   @IsOptional()
-//   title: string;
+export class UpdateClientDto {
+  @IsString()
+  @IsOptional()
+  firstName: string;
 
-//   @IsUUID(4)
-//   @IsOptional()
-//   authorId: AuthorId;
+  @IsString()
+  @IsOptional()
+  lastName: string;
 
-//   @IsInt()
-//   @Min(1500)
-//   @Max(2025)
-//   @IsOptional()
-//   yearPublished: number;
-// }
+  @IsString()
+  @IsOptional()
+  email?: string;
+
+  @IsString()
+  @IsOptional()
+  pictureUrl?: string;
+}
 
 export class GetClientsDto {
   @IsInt()

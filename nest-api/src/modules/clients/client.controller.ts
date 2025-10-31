@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ClientModel, GetClientsWithSalesCountModel } from './client.model';
 import { ClientService } from './client.service';
-import { CreateClientDto, GetClientsDto } from './client.dto';
+import { CreateClientDto, GetClientsDto, UpdateClientDto } from './client.dto';
 
 @Controller('clients')
 export class ClientController {
@@ -44,10 +44,13 @@ export class ClientController {
     return this.clientService.createClient(createClientDto);
   }
 
-  //   @Patch(':id')
-  //   updateBook(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-  //     return this.bookService.updateBook(id, updateBookDto);
-  //   }
+  @Patch(':id')
+  updateClient(
+    @Param('id') id: string,
+    @Body() updateClientDto: UpdateClientDto,
+  ) {
+    return this.clientService.updateClient(id, updateClientDto);
+  }
 
   @Delete(':id')
   deleteClient(@Param('id') id: string) {
