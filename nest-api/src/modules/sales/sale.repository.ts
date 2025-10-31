@@ -4,6 +4,7 @@ import { DataSource, Repository } from 'typeorm';
 import { SaleEntity } from './sale.entity';
 import { BookEntity } from '../books/entities/book.entity';
 import { ClientEntity, ClientId } from '../clients/client.entity';
+import { CreateSaleModel, SaleModel } from './sale.model';
 
 @Injectable()
 export class SaleRepository {
@@ -16,4 +17,22 @@ export class SaleRepository {
     private readonly clientRepository: Repository<ClientEntity>,
     private readonly dataSource: DataSource,
   ) {}
+
+  public async createSale(sale: CreateSaleModel): Promise<SaleModel> {
+    const client = await this.clientRepository.findOne({
+      where: { id: sale.clientId },
+    });
+
+    if (!client) {
+      throw new Error('Client not found');
+    }
+    const book = await this.bookRepository.findOne({
+      where: { id: sale.bookId },
+    });
+    if (!book) {
+      throw new Error('Book not found');
+    }
+
+    return this.saleRepository.save(this.saleRepository.create(sale));
+  }
 }

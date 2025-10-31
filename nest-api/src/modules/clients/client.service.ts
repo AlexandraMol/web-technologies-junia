@@ -4,9 +4,12 @@ import {
   ClientModel,
   CreateClientModel,
   FilterClientsModel,
+  GetClientBooksInput,
   GetClientsWithSalesCountModel,
+  ListOfBooksByClientModel,
   UpdateClientModel,
 } from './client.model';
+import { Filter } from 'typeorm';
 
 @Injectable()
 export class ClientService {
@@ -34,20 +37,17 @@ export class ClientService {
     return this.clientRepository.getClientById(id);
   }
 
-  // public async getClientDetails(id: string): Promise<ClientDetailsModel> {
-  //   const client = await this.getClientById(id);
+  public async getClientsBooks(
+    input: GetClientBooksInput,
+  ): Promise<ListOfBooksByClientModel> {
+    const [books, totalCount] =
+      await this.clientRepository.getClientsBooks(input);
 
-  //   if (!client) {
-  //     throw new NotFoundException('Client not found');
-  //   }
-
-  //   const numberOfBooksBought = await this.saleRepository.countByClientId(id);
-
-  //   return {
-  //     data: client,
-  //     numberOfBooksBought,
-  //   };
-  // }
+    return {
+      totalCount,
+      data: books,
+    };
+  }
 
   public async createClient(client: CreateClientModel): Promise<ClientModel> {
     return this.clientRepository.createClient(client);

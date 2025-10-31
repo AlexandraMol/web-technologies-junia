@@ -11,10 +11,34 @@ export type ClientWithSalesCountModel = {
   numberOfBooksBought: number;
 };
 
+export type ListOfBooksByClientModel = {
+  totalCount: number;
+  data: BookPurchasedByClientModel[];
+};
+
+export type BookPurchasedByClientModel = {
+  id: string;
+  title: string;
+  author: AuthorModel;
+  soldAt: Date;
+};
+
+export type AuthorModel = {
+  firstName: string;
+  lastName: string;
+};
+
 export type FilterClientsModel = {
   limit: number;
   offset: number;
   sort?: Partial<Record<keyof ClientModel, 'ASC' | 'DESC'>>;
+};
+
+export type GetClientBooksInput = {
+  clientId: string;
+  limit?: number;
+  offset?: number;
+  sort?: Partial<Record<keyof BookPurchasedByClientModel, 'ASC' | 'DESC'>>;
 };
 
 export type GetClientsModel = {
