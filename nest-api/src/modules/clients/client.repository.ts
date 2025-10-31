@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm/dist/common/typeorm.decorators';
-import { ClientEntity } from './client.entity';
+import { ClientEntity, ClientId } from './client.entity';
 import { DataSource, Repository } from 'typeorm';
 import {
   ClientModel,
@@ -28,28 +28,19 @@ export class ClientRepository {
     return [clients, totalCount];
   }
 
-  //   public async getBookById(id: string): Promise<BookModel | undefined> {
-  //     const book = await this.bookRepository.findOne({
-  //       where: { id: id as BookId },
-  //     });
+  public async getClientById(id: string): Promise<ClientModel | undefined> {
+    const client = await this.clientRepository.findOne({
+      where: { id: id as ClientId },
+    });
 
-  //     if (!book) {
-  //       return undefined;
-  //     }
+    if (!client) {
+      return undefined;
+    }
 
-  //     const author = await this.authorRepository.findOne({
-  //       where: { id: book.authorId },
-  //     });
-
-  //     if (!author) {
-  //       return undefined;
-  //     }
-
-  //     return {
-  //       ...book,
-  //       author,
-  //     };
-  //   }
+    return {
+      ...client,
+    };
+  }
 
   public async createClient(client: CreateClientModel): Promise<ClientModel> {
     return this.clientRepository.save(this.clientRepository.create(client));

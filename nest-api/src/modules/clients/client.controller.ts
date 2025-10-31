@@ -8,7 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { GetClientsModel } from './client.model';
+import { GetClientsModel, ClientDetailsModel } from './client.model';
 import { ClientService } from './client.service';
 import { CreateClientDto, GetClientsDto } from './client.dto';
 
@@ -35,10 +35,10 @@ export class ClientController {
     };
   }
 
-  //   @Get(':id')
-  //   public async getBook(@Param('id') id: string) {
-  //     return this.bookService.getBookById(id);
-  //   }
+  @Get(':id')
+  public async getClient(@Param('id') id: string): Promise<ClientDetailsModel> {
+    return this.clientService.getClientDetails(id);
+  }
 
   @Post()
   createClient(@Body() createClientDto: CreateClientDto) {

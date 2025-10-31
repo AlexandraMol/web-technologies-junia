@@ -13,6 +13,11 @@ export type CreateClientModel = {
   pictureUrl?: string;
 };
 
+export type ClientDetailsModel = {
+  data: ClientModel;
+  numberOfBooksBought: number;
+};
+
 export type UpdateClientModel = Partial<CreateClientModel>;
 
 export type FilterClientsModel = {

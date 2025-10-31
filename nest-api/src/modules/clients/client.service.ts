@@ -1,14 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ClientRepository } from './client.repository';
+import { SaleRepository } from '../sales/sale.repository';
 import {
   ClientModel,
   CreateClientModel,
   FilterClientsModel,
+  ClientDetailsModel,
 } from './client.model';
 
 @Injectable()
 export class ClientService {
-  constructor(private readonly clientRepository: ClientRepository) {}
+  constructor(
+    private readonly clientRepository: ClientRepository,
+    private readonly saleRepository: SaleRepository,
+  ) {}
 
   public async getAllClients(
     input?: FilterClientsModel,
@@ -16,9 +21,24 @@ export class ClientService {
     return this.clientRepository.getAllClients(input);
   }
 
-  //   public async getBookById(id: string): Promise<BookModel | undefined> {
-  //     return this.bookRepository.getBookById(id);
-  //   }
+  public async getClientById(id: string): Promise<ClientModel | undefined> {
+    return this.clientRepository.getClientById(id);
+  }
+
+  public async getClientDetails(id: string): Promise<ClientDetailsModel> {
+    const client = await this.getClientById(id);
+
+    if (!client) {
+      throw new NotFoundException('Client not found');
+    }
+
+    const numberOfBooksBought = await this.saleRepository.countByClientId(id);
+
+    return {
+      data: client,
+      numberOfBooksBought,
+    };
+  }
 
   public async createClient(client: CreateClientModel): Promise<ClientModel> {
     return this.clientRepository.createClient(client);
