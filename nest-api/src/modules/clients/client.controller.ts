@@ -8,7 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { GetClientsModel, ClientDetailsModel } from './client.model';
+import { ClientModel, GetClientsWithSalesCountModel } from './client.model';
 import { ClientService } from './client.service';
 import { CreateClientDto, GetClientsDto } from './client.dto';
 
@@ -17,27 +17,26 @@ export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Get()
-  async getClients(@Query() input: GetClientsDto): Promise<GetClientsModel> {
+  async getClients(
+    @Query() input: GetClientsDto,
+  ): Promise<GetClientsWithSalesCountModel> {
     const [property, direction] = input.sort
       ? input.sort.split(',')
       : ['lastName', 'ASC'];
 
-    const [clients, totalCount] = await this.clientService.getAllClients({
+    return this.clientService.getAllClientsWithSalesCount({
       ...input,
       sort: {
         [property]: direction,
       },
     });
-
-    return {
-      data: clients,
-      totalCount,
-    };
   }
 
   @Get(':id')
-  public async getClient(@Param('id') id: string): Promise<ClientDetailsModel> {
-    return this.clientService.getClientDetails(id);
+  public async getClient(
+    @Param('id') id: string,
+  ): Promise<ClientModel | undefined> {
+    return this.clientService.getClientById(id);
   }
 
   @Post()

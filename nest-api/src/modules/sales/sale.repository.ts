@@ -16,12 +16,4 @@ export class SaleRepository {
     private readonly clientRepository: Repository<ClientEntity>,
     private readonly dataSource: DataSource,
   ) {}
-
-  public async countByClientId(clientId: string): Promise<number> {
-    return this.saleRepository.count({
-      where: {
-        client: { id: clientId as ClientId },
-      },
-    });
-  }
 }

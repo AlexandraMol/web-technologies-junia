@@ -4,13 +4,10 @@ import { ClientEntity } from './client.entity';
 import { ClientService } from './client.service';
 import { ClientRepository } from './client.repository';
 import { ClientController } from './client.controller';
-import { SaleRepository } from '../sales/sale.repository';
-import { SaleEntity } from '../sales/sale.entity';
-import { BookEntity } from '../books/entities/book.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ClientEntity, SaleEntity, BookEntity])],
+  imports: [TypeOrmModule.forFeature([ClientEntity])],
   controllers: [ClientController],
-  providers: [ClientRepository, ClientService, SaleRepository],
+  providers: [ClientRepository, ClientService],
 })
 export class ClientsModule {}

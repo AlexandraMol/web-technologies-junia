@@ -6,19 +6,10 @@ export type ClientModel = {
   pictureUrl?: string;
 };
 
-export type CreateClientModel = {
-  firstName: string;
-  lastName: string;
-  email?: string;
-  pictureUrl?: string;
-};
-
-export type ClientDetailsModel = {
-  data: ClientModel;
+export type ClientWithSalesCountModel = {
+  client: ClientModel;
   numberOfBooksBought: number;
 };
-
-export type UpdateClientModel = Partial<CreateClientModel>;
 
 export type FilterClientsModel = {
   limit: number;
@@ -30,3 +21,17 @@ export type GetClientsModel = {
   totalCount: number;
   data: ClientModel[];
 };
+
+export type GetClientsWithSalesCountModel = {
+  totalCount: number;
+  data: ClientWithSalesCountModel[];
+};
+
+export type CreateClientModel = {
+  firstName: string;
+  lastName: string;
+  email?: string;
+  pictureUrl?: string;
+};
+
+export type UpdateClientModel = Partial<CreateClientModel>;
