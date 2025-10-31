@@ -50,8 +50,8 @@ export class ClientController {
   //     return this.bookService.updateBook(id, updateBookDto);
   //   }
 
-  //   @Delete(':id')
-  //   deleteBook(@Param('id') id: string) {
-  //     return this.bookService.deleteBook(id);
-  //   }
+  @Delete(':id')
+  deleteClient(@Param('id') id: string) {
+    return this.clientService.deleteClient(id);
+  }
 }

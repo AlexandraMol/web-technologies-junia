@@ -36,7 +36,7 @@ export class ClientService {
   //     return this.bookRepository.updateBook(id, book);
   //   }
 
-  //   public async deleteBook(id: string): Promise<void> {
-  //     await this.bookRepository.deleteBook(id);
-  //   }
+  public async deleteClient(id: string): Promise<void> {
+    await this.clientRepository.deleteClient(id);
+  }
 }

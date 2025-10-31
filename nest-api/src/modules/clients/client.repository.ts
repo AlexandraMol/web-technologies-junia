@@ -70,15 +70,17 @@ export class ClientRepository {
   //     await this.bookRepository.update(id, book);
   //   }
 
-  //   public async deleteBook(id: string): Promise<void> {
-  //     await this.bookRepository.delete(id);
-  //   }
+  public async deleteClient(id: string): Promise<void> {
+    await this.clientRepository.delete(id);
+  }
 
-  //   public async deleteBooks(ids: string[]): Promise<void> {
-  //     await this.dataSource.transaction(async (transactionalEntityManager) => {
-  //       await Promise.all(
-  //         ids.map((id) => transactionalEntityManager.delete(BookEntity, { id })),
-  //       );
-  //     });
-  //   }
+  public async deleteClients(ids: string[]): Promise<void> {
+    await this.dataSource.transaction(async (transactionalEntityManager) => {
+      await Promise.all(
+        ids.map((id) =>
+          transactionalEntityManager.delete(ClientEntity, { id }),
+        ),
+      );
+    });
+  }
 }
