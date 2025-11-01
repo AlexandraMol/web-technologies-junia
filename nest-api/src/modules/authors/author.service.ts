@@ -3,7 +3,9 @@ import {
   AuthorModel,
   CreateAuthorModel,
   FilterAuthorsModel,
+  GetAuthorsBooksInput,
   GetAuthorsWithNumberOfBooksModel,
+  ListOfBooksByAuthorModel,
   UpdateAuthorModel,
 } from './author.model';
 import { AuthorRepository } from './author.repository';
@@ -44,6 +46,18 @@ export class AuthorService {
     }
 
     return this.authorRepository.updateAuthor(id, author);
+  }
+
+  public async getBooksByAuthor(
+    input: GetAuthorsBooksInput,
+  ): Promise<ListOfBooksByAuthorModel> {
+    const [books, totalCount] =
+      await this.authorRepository.getBooksByAuthor(input);
+
+    return {
+      totalCount,
+      data: books,
+    };
   }
 
   public async getAuthorById(id: string): Promise<AuthorModel | undefined> {

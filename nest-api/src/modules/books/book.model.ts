@@ -14,6 +14,13 @@ export type BookModel = {
   pictureUrl: string;
 };
 
+export type BookModelWithNoAuthor = {
+  id: string;
+  title: string;
+  yearPublished: number;
+  pictureUrl: string;
+};
+
 export type BookWithNumberOfClients = {
   book: BookModel;
   numberOfClients: number;

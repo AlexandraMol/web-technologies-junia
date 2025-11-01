@@ -13,6 +13,7 @@ import { CreateAuthorDto, GetAuthorsDto, UpdateAuthorDto } from './author.dto';
 import {
   GetAuthorsModel,
   GetAuthorsWithNumberOfBooksModel,
+  ListOfBooksByAuthorModel,
 } from './author.model';
 
 @Controller('authors')
@@ -43,6 +44,24 @@ export class AuthorController {
   @Get(':id')
   public async getAuthor(@Param('id') id: string) {
     return this.authorService.getAuthorById(id);
+  }
+
+  @Get(':id/books')
+  public async getBooksByAuthor(
+    @Param('id') id: string,
+    @Query() input: GetAuthorsDto,
+  ): Promise<ListOfBooksByAuthorModel> {
+    const [property, direction] = input.sort
+      ? input.sort.split(',')
+      : ['title', 'ASC'];
+
+    return this.authorService.getBooksByAuthor({
+      ...input,
+      sort: {
+        [property]: direction,
+      },
+      authorId: id,
+    });
   }
 
   @Patch(':id')

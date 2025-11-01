@@ -1,3 +1,4 @@
+import { BookModelWithNoAuthor } from '../books/book.model';
 import { AuthorId } from './author.entity';
 
 export type AuthorModel = {
@@ -34,4 +35,16 @@ export type FilterAuthorsModel = {
   limit: number;
   offset: number;
   sort?: Partial<Record<keyof AuthorModel, 'ASC' | 'DESC'>>;
+};
+
+export type GetAuthorsBooksInput = {
+  authorId: string;
+  limit?: number;
+  offset?: number;
+  sort?: Partial<Record<keyof BookModelWithNoAuthor, 'ASC' | 'DESC'>>;
+};
+
+export type ListOfBooksByAuthorModel = {
+  totalCount: number;
+  data: BookModelWithNoAuthor[];
 };

@@ -4,18 +4,23 @@ import {
   AuthorWithNumberOfBooks,
   CreateAuthorModel,
   FilterAuthorsModel,
+  GetAuthorsBooksInput,
   UpdateAuthorModel,
 } from './author.model';
 import { AuthorEntity, AuthorId } from './author.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { BookEntity } from '../books/book.entity';
+import { BookModel, BookModelWithNoAuthor } from '../books/book.model';
 
 @Injectable()
 export class AuthorRepository {
   constructor(
     @InjectRepository(AuthorEntity)
     private readonly authorRepository: Repository<AuthorEntity>,
+
+    @InjectRepository(BookEntity)
+    private readonly bookRepository: Repository<BookEntity>,
   ) {}
 
   public async getAllAuthors(
@@ -80,6 +85,17 @@ export class AuthorRepository {
     return [authors, totalCount];
   }
 
+  public async getBooksByAuthor(
+    input: GetAuthorsBooksInput,
+  ): Promise<[BookModelWithNoAuthor[], number]> {
+    const qb = this.buildBooksByAuthorQuery(input);
+
+    const [books, totalCount] = await qb.getManyAndCount();
+    const data = this.mapBooksByAuthor(books);
+
+    return [data, totalCount];
+  }
+
   private buildAuthorsWithNumberOfBooksQuery(
     input?: FilterAuthorsModel,
   ): SelectQueryBuilder<AuthorEntity> {
@@ -94,6 +110,26 @@ export class AuthorRepository {
 
     if (input?.sort) {
       qb.orderBy(this.mapSortToQueryOrder(input.sort, 'author'));
+    }
+    if (input?.limit !== undefined) {
+      qb.take(input.limit);
+    }
+    if (input?.offset !== undefined) {
+      qb.skip(input.offset);
+    }
+
+    return qb;
+  }
+
+  private buildBooksByAuthorQuery(
+    input: GetAuthorsBooksInput,
+  ): SelectQueryBuilder<BookEntity> {
+    const qb = this.bookRepository
+      .createQueryBuilder('book')
+      .where('book.authorId = :authorId', { authorId: input.authorId });
+
+    if (input?.sort) {
+      qb.orderBy(this.mapSortToQueryOrder(input.sort, 'book'));
     }
     if (input?.limit !== undefined) {
       qb.take(input.limit);
@@ -126,6 +162,15 @@ export class AuthorRepository {
         pictureUrl: entity.pictureUrl,
       },
       numberOfBooks: Number(raw[index]?.booksCount ?? 0),
+    }));
+  }
+
+  private mapBooksByAuthor(books: BookEntity[]): BookModelWithNoAuthor[] {
+    return books.map((book) => ({
+      id: book.id.toString(),
+      title: book.title,
+      yearPublished: book.yearPublished,
+      pictureUrl: book.pictureUrl,
     }));
   }
 }
