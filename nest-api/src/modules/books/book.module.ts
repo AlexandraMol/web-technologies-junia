@@ -5,10 +5,20 @@ import { BookRepository } from './book.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookEntity } from './entities/book.entity';
 import { AuthorEntity } from '../authors/author.entity';
+import { ClientEntity } from '../clients/client.entity';
+import { ClientRepository } from '../clients/client.repository';
+import { SaleEntity } from '../sales/sale.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BookEntity, AuthorEntity])],
+  imports: [
+    TypeOrmModule.forFeature([
+      BookEntity,
+      AuthorEntity,
+      ClientEntity,
+      SaleEntity,
+    ]),
+  ],
   controllers: [BookController],
-  providers: [BookRepository, BookService],
+  providers: [BookRepository, BookService, ClientRepository],
 })
 export class BookModule {}

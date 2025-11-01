@@ -9,7 +9,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateBookDto, GetBooksDto, UpdateBookDto } from './book.dto';
-import { GetBooksModel, GetBooksWithNumberOfClientsModel } from './book.model';
+import {
+  GetBooksModel,
+  GetBooksWithNumberOfClientsModel,
+  ListOfClientsByBookModel,
+} from './book.model';
 import { BookService } from './book.service';
 
 @Controller('books')
@@ -35,6 +39,24 @@ export class BookController {
   @Get(':id')
   public async getBook(@Param('id') id: string) {
     return this.bookService.getBookById(id);
+  }
+
+  @Get(':id/clients')
+  public async getBooksClients(
+    @Param('id') id: string,
+    @Query() input: GetBooksDto,
+  ): Promise<ListOfClientsByBookModel> {
+    const [property, direction] = input.sort
+      ? input.sort.split(',')
+      : ['lastName', 'ASC'];
+
+    return this.bookService.getBooksClients({
+      ...input,
+      sort: {
+        [property]: direction,
+      },
+      bookId: id,
+    });
   }
 
   @Post()

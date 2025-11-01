@@ -1,4 +1,5 @@
 import { AuthorId } from '../authors/author.entity';
+import { ClientModel } from '../clients/client.model';
 
 export type BookAuthorModel = {
   firstName: string;
@@ -16,6 +17,18 @@ export type BookModel = {
 export type BookWithNumberOfClients = {
   book: BookModel;
   numberOfClients: number;
+};
+
+export type GetBooksClientsInput = {
+  bookId: string;
+  limit?: number;
+  offset?: number;
+  sort?: Partial<Record<keyof ClientModel, 'ASC' | 'DESC'>>;
+};
+
+export type ListOfClientsByBookModel = {
+  totalCount: number;
+  data: ClientModel[];
 };
 
 export type CreateBookModel = {

@@ -7,11 +7,14 @@ import {
   BookWithNumberOfClients,
   CreateBookModel,
   FilterBooksModel,
+  GetBooksClientsInput,
   UpdateBookModel,
 } from './book.model';
 import { BookEntity, BookId } from './entities/book.entity';
 import { SaleEntity } from '../sales/sale.entity';
 import { raw } from 'express';
+import { ClientModel } from '../clients/client.model';
+import { ClientEntity } from '../clients/client.entity';
 
 @Injectable()
 export class BookRepository {
@@ -20,6 +23,9 @@ export class BookRepository {
     private readonly authorRepository: Repository<AuthorEntity>,
     @InjectRepository(BookEntity)
     private readonly bookRepository: Repository<BookEntity>,
+    @InjectRepository(ClientEntity)
+    private readonly clientRepository: Repository<ClientEntity>,
+
     private readonly dataSource: DataSource,
   ) {}
 
@@ -111,6 +117,18 @@ export class BookRepository {
     return [books, totalCount];
   }
 
+  public async getBooksClients(
+    input: GetBooksClientsInput,
+  ): Promise<[ClientModel[], number]> {
+    const qb = this.buildBooksClientsQuery(input);
+
+    const [clients, totalCount] = await qb.getManyAndCount();
+
+    const data = this.mapBooksClients(clients);
+
+    return [data, totalCount];
+  }
+
   private buildBooksWithNumberOfClientsQuery(
     input?: FilterBooksModel,
   ): SelectQueryBuilder<BookEntity> {
@@ -133,6 +151,28 @@ export class BookRepository {
 
     if (input?.sort) {
       qb.orderBy(this.mapSortToQueryOrder(input.sort, 'book'));
+    }
+    if (input?.limit !== undefined) {
+      qb.take(input.limit);
+    }
+    if (input?.offset !== undefined) {
+      qb.skip(input.offset);
+    }
+
+    return qb;
+  }
+
+  private buildBooksClientsQuery(
+    input: GetBooksClientsInput,
+  ): SelectQueryBuilder<ClientEntity> {
+    const qb = this.clientRepository
+      .createQueryBuilder('client')
+      .innerJoin(SaleEntity, 'sale', 'sale.clientId = client.id')
+      .where('sale.bookId = :bookId', { bookId: input.bookId })
+      .distinct(true);
+
+    if (input?.sort) {
+      qb.orderBy(this.mapSortToQueryOrder(input.sort, 'client'));
     }
     if (input?.limit !== undefined) {
       qb.take(input.limit);
@@ -169,6 +209,16 @@ export class BookRepository {
         },
       },
       numberOfClients: Number(raw[index]?.clientsCount ?? 0),
+    }));
+  }
+
+  private mapBooksClients(clients: ClientEntity[]): ClientModel[] {
+    return clients.map((client) => ({
+      id: client.id.toString(),
+      firstName: client.firstName,
+      lastName: client.lastName,
+      email: client.email,
+      pictureUrl: client.pictureUrl,
     }));
   }
 }

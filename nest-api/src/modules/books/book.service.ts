@@ -3,7 +3,9 @@ import {
   BookModel,
   CreateBookModel,
   FilterBooksModel,
+  GetBooksClientsInput,
   GetBooksWithNumberOfClientsModel,
+  ListOfClientsByBookModel,
   UpdateBookModel,
 } from './book.model';
 import { BookRepository } from './book.repository';
@@ -32,6 +34,18 @@ export class BookService {
 
   public async getBookById(id: string): Promise<BookModel | undefined> {
     return this.bookRepository.getBookById(id);
+  }
+
+  public async getBooksClients(
+    input: GetBooksClientsInput,
+  ): Promise<ListOfClientsByBookModel> {
+    const [clients, totalCount] =
+      await this.bookRepository.getBooksClients(input);
+
+    return {
+      totalCount,
+      data: clients,
+    };
   }
 
   public async createBook(book: CreateBookModel): Promise<BookModel> {
