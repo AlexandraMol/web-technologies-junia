@@ -7,6 +7,11 @@ export type AuthorModel = {
   pictureUrl: string;
 };
 
+export type AuthorWithNumberOfBooks = {
+  author: AuthorModel;
+  numberOfBooks: number;
+};
+
 export type CreateAuthorModel = {
   firstName: string;
   lastName: string;
@@ -18,6 +23,11 @@ export type UpdateAuthorModel = Partial<CreateAuthorModel>;
 export type GetAuthorsModel = {
   totalCount: number;
   data: AuthorModel[];
+};
+
+export type GetAuthorsWithNumberOfBooksModel = {
+  totalCount: number;
+  data: AuthorWithNumberOfBooks[];
 };
 
 export type FilterAuthorsModel = {

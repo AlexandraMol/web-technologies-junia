@@ -10,29 +10,29 @@ import {
 } from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto, GetAuthorsDto, UpdateAuthorDto } from './author.dto';
-import { GetAuthorsModel } from './author.model';
+import {
+  GetAuthorsModel,
+  GetAuthorsWithNumberOfBooksModel,
+} from './author.model';
 
 @Controller('authors')
 export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 
   @Get()
-  async getAllAuthors(@Query() input: GetAuthorsDto): Promise<GetAuthorsModel> {
+  async getAllAuthors(
+    @Query() input: GetAuthorsDto,
+  ): Promise<GetAuthorsWithNumberOfBooksModel> {
     const [property, direction] = input.sort
       ? input.sort.split(',')
       : ['lastName', 'ASC'];
 
-    const [authors, totalCount] = await this.authorService.getAllAuthors({
+    return this.authorService.getAllAuthorsWithNumberOfBooks({
       ...input,
       sort: {
         [property]: direction,
       },
     });
-
-    return {
-      data: authors,
-      totalCount,
-    };
   }
 
   @Post()

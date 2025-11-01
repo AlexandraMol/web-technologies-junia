@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import {
   AuthorModel,
+  AuthorWithNumberOfBooks,
   CreateAuthorModel,
   FilterAuthorsModel,
   UpdateAuthorModel,
 } from './author.model';
 import { AuthorEntity, AuthorId } from './author.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
+import { BookEntity } from '../books/book.entity';
 
 @Injectable()
 export class AuthorRepository {
@@ -63,5 +65,67 @@ export class AuthorRepository {
 
   public async deleteAuthor(id: string): Promise<void> {
     await this.authorRepository.delete(id);
+  }
+
+  public async getAllAuthorsWithNumberOfBooks(
+    input?: FilterAuthorsModel,
+  ): Promise<[AuthorWithNumberOfBooks[], number]> {
+    const qb = this.buildAuthorsWithNumberOfBooksQuery(input);
+
+    const [entities, totalCount] = await qb.getManyAndCount();
+    const raw = await qb.getRawMany();
+
+    const authors = this.mapAuthorsWithNumberOfBooks(entities, raw);
+
+    return [authors, totalCount];
+  }
+
+  private buildAuthorsWithNumberOfBooksQuery(
+    input?: FilterAuthorsModel,
+  ): SelectQueryBuilder<AuthorEntity> {
+    const qb = this.authorRepository
+      .createQueryBuilder('author')
+      .leftJoin(BookEntity, 'book', 'book.authorId = author.id')
+      .addSelect('COUNT(book.id)', 'booksCount')
+      .groupBy('author.id')
+      .addGroupBy('author.firstName')
+      .addGroupBy('author.lastName')
+      .addGroupBy('author.pictureUrl');
+
+    if (input?.sort) {
+      qb.orderBy(this.mapSortToQueryOrder(input.sort, 'author'));
+    }
+    if (input?.limit !== undefined) {
+      qb.take(input.limit);
+    }
+    if (input?.offset !== undefined) {
+      qb.skip(input.offset);
+    }
+
+    return qb;
+  }
+
+  private mapSortToQueryOrder(
+    sort: NonNullable<FilterAuthorsModel['sort']>,
+    entity: string,
+  ): Record<string, 'ASC' | 'DESC'> {
+    return Object.fromEntries(
+      Object.entries(sort).map(([key, dir]) => [`${entity}.${key}`, dir]),
+    );
+  }
+
+  private mapAuthorsWithNumberOfBooks(
+    entities: AuthorEntity[],
+    raw: any[],
+  ): AuthorWithNumberOfBooks[] {
+    return entities.map((entity, index) => ({
+      author: {
+        id: entity.id,
+        firstName: entity.firstName,
+        lastName: entity.lastName,
+        pictureUrl: entity.pictureUrl,
+      },
+      numberOfBooks: Number(raw[index]?.booksCount ?? 0),
+    }));
   }
 }
