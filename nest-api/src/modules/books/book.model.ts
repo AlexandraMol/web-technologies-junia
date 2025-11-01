@@ -10,6 +10,12 @@ export type BookModel = {
   title: string;
   author: BookAuthorModel;
   yearPublished: number;
+  pictureUrl?: string;
+};
+
+export type BookWithNumberOfClients = {
+  book: BookModel;
+  numberOfClients: number;
 };
 
 export type CreateBookModel = {
@@ -29,4 +35,9 @@ export type FilterBooksModel = {
 export type GetBooksModel = {
   totalCount: number;
   data: BookModel[];
+};
+
+export type GetBooksWithNumberOfClientsModel = {
+  totalCount: number;
+  data: BookWithNumberOfClients[];
 };

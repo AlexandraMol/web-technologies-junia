@@ -3,6 +3,7 @@ import {
   BookModel,
   CreateBookModel,
   FilterBooksModel,
+  GetBooksWithNumberOfClientsModel,
   UpdateBookModel,
 } from './book.model';
 import { BookRepository } from './book.repository';
@@ -15,6 +16,18 @@ export class BookService {
     input?: FilterBooksModel,
   ): Promise<[BookModel[], number]> {
     return this.bookRepository.getAllBooks(input);
+  }
+
+  public async getAllBooksWithNumberOfClients(
+    input?: FilterBooksModel,
+  ): Promise<GetBooksWithNumberOfClientsModel> {
+    const [books, totalCount] =
+      await this.bookRepository.getAllBooksWithNumberOfClients(input);
+
+    return {
+      totalCount,
+      data: books,
+    };
   }
 
   public async getBookById(id: string): Promise<BookModel | undefined> {
