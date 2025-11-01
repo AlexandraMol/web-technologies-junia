@@ -6,7 +6,7 @@ import { ClientRepository } from './client.repository';
 import { ClientController } from './client.controller';
 import { SaleRepository } from '../sales/sale.repository';
 import { SaleEntity } from '../sales/sale.entity';
-import { BookEntity } from '../books/entities/book.entity';
+import { BookEntity } from '../books/book.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ClientEntity, SaleEntity, BookEntity])],

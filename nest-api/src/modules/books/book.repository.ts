@@ -10,7 +10,7 @@ import {
   GetBooksClientsInput,
   UpdateBookModel,
 } from './book.model';
-import { BookEntity, BookId } from './entities/book.entity';
+import { BookEntity, BookId } from './book.entity';
 import { SaleEntity } from '../sales/sale.entity';
 import { raw } from 'express';
 import { ClientModel } from '../clients/client.model';

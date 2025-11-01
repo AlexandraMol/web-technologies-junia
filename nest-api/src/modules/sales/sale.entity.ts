@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ClientEntity, type ClientId } from '../clients/client.entity';
-import { BookEntity, type BookId } from '../books/entities/book.entity';
+import { BookEntity, type BookId } from '../books/book.entity';
 
 export type SaleId = string & { __brand: 'Sale' };
 

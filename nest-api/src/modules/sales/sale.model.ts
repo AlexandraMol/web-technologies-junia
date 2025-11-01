@@ -1,5 +1,5 @@
 import { ClientId } from '../clients/client.entity';
-import { BookId } from '../books/entities/book.entity';
+import { BookId } from '../books/book.entity';
 
 export type CreateSaleModel = {
   soldAt: Date;

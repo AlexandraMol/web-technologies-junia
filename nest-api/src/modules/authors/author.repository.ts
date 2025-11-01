@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   AuthorModel,
   CreateAuthorModel,
+  FilterAuthorsModel,
   UpdateAuthorModel,
 } from './author.model';
 import { AuthorEntity, AuthorId } from './author.entity';
@@ -15,8 +16,16 @@ export class AuthorRepository {
     private readonly authorRepository: Repository<AuthorEntity>,
   ) {}
 
-  public async getAllAuthors(): Promise<AuthorModel[]> {
-    return this.authorRepository.find();
+  public async getAllAuthors(
+    input?: FilterAuthorsModel,
+  ): Promise<[AuthorModel[], number]> {
+    const [authors, totalCount] = await this.authorRepository.findAndCount({
+      take: input?.limit,
+      skip: input?.offset,
+      order: input?.sort,
+    });
+
+    return [authors, totalCount];
   }
 
   public async createAuthor(author: CreateAuthorModel): Promise<AuthorModel> {
@@ -50,5 +59,9 @@ export class AuthorRepository {
     }
 
     await this.authorRepository.update(id, author);
+  }
+
+  public async deleteAuthor(id: string): Promise<void> {
+    await this.authorRepository.delete(id);
   }
 }

@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { AuthorEntity, type AuthorId } from '../../authors/author.entity';
+import { AuthorEntity, type AuthorId } from '../authors/author.entity';
 
 export type BookId = string & { __brand: 'Book' };
 

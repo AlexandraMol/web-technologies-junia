@@ -14,3 +14,14 @@ export type CreateAuthorModel = {
 };
 
 export type UpdateAuthorModel = Partial<CreateAuthorModel>;
+
+export type GetAuthorsModel = {
+  totalCount: number;
+  data: AuthorModel[];
+};
+
+export type FilterAuthorsModel = {
+  limit: number;
+  offset: number;
+  sort?: Partial<Record<keyof AuthorModel, 'ASC' | 'DESC'>>;
+};

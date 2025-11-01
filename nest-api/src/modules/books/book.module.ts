@@ -3,7 +3,7 @@ import { BookController } from './book.controller';
 import { BookService } from './book.service';
 import { BookRepository } from './book.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BookEntity } from './entities/book.entity';
+import { BookEntity } from './book.entity';
 import { AuthorEntity } from '../authors/author.entity';
 import { ClientEntity } from '../clients/client.entity';
 import { ClientRepository } from '../clients/client.repository';

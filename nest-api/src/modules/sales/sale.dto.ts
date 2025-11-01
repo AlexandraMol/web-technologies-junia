@@ -7,7 +7,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import type { BookId } from '../books/entities/book.entity';
+import type { BookId } from '../books/book.entity';
 import type { ClientId } from '../clients/client.entity';
 
 export class CreateSaleDto {
