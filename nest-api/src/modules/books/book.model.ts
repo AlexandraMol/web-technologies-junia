@@ -11,7 +11,7 @@ export type BookModel = {
   title: string;
   author: BookAuthorModel;
   yearPublished: number;
-  pictureUrl?: string;
+  pictureUrl: string;
 };
 
 export type BookWithNumberOfClients = {
@@ -35,6 +35,7 @@ export type CreateBookModel = {
   title: string;
   authorId: AuthorId;
   yearPublished: number;
+  pictureUrl: string;
 };
 
 export type UpdateBookModel = Partial<CreateBookModel>;

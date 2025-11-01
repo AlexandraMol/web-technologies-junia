@@ -21,8 +21,8 @@ export class BookEntity extends BaseEntity {
   @Column({ name: 'year_published', type: 'int' })
   yearPublished: number;
 
-  @Column({ name: 'picture_url', type: 'varchar', nullable: true })
-  pictureUrl?: string;
+  @Column({ name: 'picture_url', type: 'varchar' })
+  pictureUrl: string;
 
   @Column({ name: 'author_id', type: 'uuid' })
   authorId: AuthorId;
