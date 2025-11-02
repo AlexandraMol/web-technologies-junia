@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   AuthorModel,
+  AuthorWithStatsModel,
   CreateAuthorModel,
   FilterAuthorsModel,
   GetAuthorsBooksInput,
@@ -60,8 +61,30 @@ export class AuthorService {
     };
   }
 
-  public async getAuthorById(id: string): Promise<AuthorModel | undefined> {
-    return this.authorRepository.getAuthorById(id);
+  public async getAuthorById(
+    id: string,
+  ): Promise<AuthorWithStatsModel | undefined> {
+    const author = await this.authorRepository.getAuthorById(id);
+    if (!author) {
+      return undefined;
+    }
+
+    const [booksCount, salesCount] = await Promise.all([
+      this.authorRepository.countBooksOfAuthor(id),
+      this.authorRepository.countSalesOfAuthorBooks(id),
+    ]);
+
+    const averageSalesPerBook =
+      Math.round((booksCount > 0 ? salesCount / booksCount : 0) * 100) / 100;
+
+    return {
+      ...author,
+      stats: {
+        booksCount,
+        salesCount,
+        averageSalesPerBook,
+      },
+    };
   }
 
   public async deleteAuthor(id: string): Promise<void> {

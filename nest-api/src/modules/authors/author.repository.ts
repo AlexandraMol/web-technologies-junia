@@ -12,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { BookEntity } from '../books/book.entity';
 import { BookModel, BookModelWithNoAuthor } from '../books/book.model';
+import { SaleEntity } from '../sales/sale.entity';
 
 @Injectable()
 export class AuthorRepository {
@@ -21,6 +22,9 @@ export class AuthorRepository {
 
     @InjectRepository(BookEntity)
     private readonly bookRepository: Repository<BookEntity>,
+
+    @InjectRepository(SaleEntity)
+    private readonly saleRepository: Repository<SaleEntity>,
   ) {}
 
   public async getAllAuthors(
@@ -139,6 +143,21 @@ export class AuthorRepository {
     }
 
     return qb;
+  }
+
+  public async countBooksOfAuthor(authorId: string): Promise<number> {
+    return this.bookRepository
+      .createQueryBuilder('book')
+      .where('book.authorId = :authorId', { authorId })
+      .getCount();
+  }
+
+  public async countSalesOfAuthorBooks(authorId: string): Promise<number> {
+    return this.saleRepository
+      .createQueryBuilder('sale')
+      .innerJoin('sale.book', 'book')
+      .where('book.authorId = :authorId', { authorId })
+      .getCount();
   }
 
   private mapSortToQueryOrder(

@@ -48,3 +48,13 @@ export type ListOfBooksByAuthorModel = {
   totalCount: number;
   data: BookModelWithNoAuthor[];
 };
+
+export type AuthorStatsModel = {
+  booksCount: number;
+  salesCount: number;
+  averageSalesPerBook: number;
+};
+
+export type AuthorWithStatsModel = AuthorModel & {
+  stats: AuthorStatsModel;
+};
