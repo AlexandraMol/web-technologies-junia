@@ -32,13 +32,23 @@ export class BookRepository {
   public async getAllBooks(
     input?: FilterBooksModel,
   ): Promise<[BookModel[], number]> {
-    const [books, totalCount] = await this.bookRepository.findAndCount({
-      take: input?.limit,
-      skip: input?.offset,
-      relations: { author: true },
-      order: input?.sort,
-    });
+    const qb = this.bookRepository
+      .createQueryBuilder('book')
+      .leftJoinAndSelect('book.author', 'author');
 
+    if (input?.sort) {
+      const [property, direction] = Object.entries(input.sort)[0];
+      if (property === 'author') {
+        qb.orderBy('author.lastName', direction);
+      } else {
+        qb.orderBy(`book.${property}`, direction);
+      }
+    }
+
+    if (input?.limit) qb.take(input.limit);
+    if (input?.offset) qb.skip(input.offset);
+
+    const [books, totalCount] = await qb.getManyAndCount();
     return [books, totalCount];
   }
 
