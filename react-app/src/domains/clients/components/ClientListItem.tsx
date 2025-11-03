@@ -2,6 +2,7 @@ import type { ReactElement } from 'react'
 import type { ClientModel } from '../ClientModel'
 import { Card, Typography, Button, Avatar, Row, Modal } from 'antd'
 import { DeleteOutlined, UserOutlined } from '@ant-design/icons'
+import { useNavigate } from '@tanstack/react-router'
 
 const { Text, Title } = Typography
 
@@ -14,17 +15,23 @@ export function ClientListItem({
   client,
   onDelete,
 }: ClientListItemProps): ReactElement {
-  const { firstName, lastName, email, pictureUrl } = client.client
+  const navigate = useNavigate()
+  const { id, firstName, lastName, email, pictureUrl } = client.client
+  const { numberOfBooksBought } = client
   const [modal, contextHolder] = Modal.useModal()
+
+  const goToDetails = (): void => {
+    navigate({ to: '/clients/$clientId', params: { clientId: id } })
+  }
 
   const confirmDelete = (): void => {
     modal.confirm({
       title: 'Delete this client?',
-      content: `Are you sure you want to delete "${client.client.firstName} ${client.client.lastName}"? This action cannot be undone.`,
+      content: `Are you sure you want to delete "${firstName} ${lastName}"? This action cannot be undone.`,
       okText: 'Delete',
       cancelText: 'Cancel',
       okButtonProps: { danger: true },
-      onOk: () => onDelete(client.client.id),
+      onOk: () => onDelete(id),
     })
   }
 
@@ -32,6 +39,7 @@ export function ClientListItem({
     <>
       {contextHolder}
       <Card
+        onClick={goToDetails}
         hoverable
         style={{
           borderRadius: 14,
@@ -86,6 +94,9 @@ export function ClientListItem({
             </Text>
           )}
         </div>
+        <span>
+          Number of books bougth: <b>{numberOfBooksBought}</b>
+        </span>
         <Button
           block
           style={{
