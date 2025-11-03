@@ -13,6 +13,6 @@ export class AuthorEntity extends BaseEntity {
   @Column({ name: 'last_name', type: 'varchar' })
   lastName: string;
 
-  @Column({ name: 'picture_url', type: 'varchar', nullable: true })
-  pictureUrl?: string;
+  @Column({ name: 'picture_url', type: 'varchar' })
+  pictureUrl: string;
 }
