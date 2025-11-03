@@ -14,5 +14,14 @@ export const useClientProvider = () => {
       .catch(err => console.error(err))
   }
 
-  return { clients, loadClients }
+  const deleteClient = (id: string) => {
+    axios
+      .delete(`http://localhost:3000/clients/${id}`)
+      .then(() => {
+        loadClients()
+      })
+      .catch(err => console.error(err))
+  }
+
+  return { clients, loadClients, deleteClient }
 }

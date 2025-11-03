@@ -4,7 +4,7 @@ import { Row, Col } from 'antd'
 import { ClientListItem } from './ClientListItem'
 
 export function ClientList() {
-  const { clients, loadClients } = useClientProvider()
+  const { clients, loadClients, deleteClient } = useClientProvider()
 
   useEffect(() => {
     loadClients()
@@ -15,7 +15,11 @@ export function ClientList() {
       <Row gutter={[100, 100]}>
         {clients.map(client => (
           <Col key={client.client.id} xs={24} sm={12} lg={8} xl={6}>
-            <ClientListItem client={client} />
+            <ClientListItem
+              key={client.client.id}
+              client={client}
+              onDelete={deleteClient}
+            />
           </Col>
         ))}
       </Row>
