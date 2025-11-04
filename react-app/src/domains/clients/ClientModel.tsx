@@ -8,3 +8,10 @@ export type ClientModel = {
   }
   numberOfBooksBought: number
 }
+
+export type CreateClientModel = {
+  firstName: string
+  lastName: string
+  email?: string
+  pictureUrl?: string
+}
