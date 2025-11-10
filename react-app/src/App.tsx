@@ -10,7 +10,7 @@ import {
 import { Link } from '@tanstack/react-router'
 
 type CardSpec = {
-  key: 'clients' | 'books' | 'authors' | 'sale'
+  key: 'clients' | 'books' | 'author' | 'sale'
   title: string
   description: string
   cta: string
@@ -37,11 +37,11 @@ const CARDS: Readonly<CardSpec[]> = [
     icon: <BookOutlined />,
   },
   {
-    key: 'authors',
+    key: 'author',
     title: 'Authors',
     description: 'Discover the authors and their masterpieces',
     cta: 'See Authors',
-    to: '/authors',
+    to: '/author',
     icon: <TeamOutlined />,
   },
   {
