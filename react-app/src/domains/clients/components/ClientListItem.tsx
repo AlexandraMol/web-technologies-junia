@@ -88,10 +88,18 @@ export function ClientListItem({
           <Title level={5} style={{ marginBottom: 4 }}>
             {`${firstName} ${lastName}`}
           </Title>
-          {email && (
-            <Text type="secondary" style={{ fontSize: 14 }}>
+          {email ? (
+            <Text
+              type="secondary"
+              style={{ display: 'block', fontSize: 14, height: 40 }}
+            >
               {email}
             </Text>
+          ) : (
+            <Text
+              type="secondary"
+              style={{ display: 'block', fontSize: 14, height: 40 }}
+            ></Text>
           )}
         </div>
         <span>
