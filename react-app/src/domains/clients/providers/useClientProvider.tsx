@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import type { ClientModel, CreateClientModel } from '../ClientModel'
+import type { ClientExtendedModel, CreateClientModel } from '../ClientModel'
 import axios from 'axios'
 
 export const useClientProvider = () => {
-  const [clients, setClients] = useState<ClientModel[]>([])
+  const [clients, setClients] = useState<ClientExtendedModel[]>([])
 
   const loadClients = () => {
     axios

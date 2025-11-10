@@ -4,7 +4,7 @@ import { Button, Input, Modal, Space } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
 interface CreateClientModalProps {
-  onCreate: (book: CreateClientModel) => void
+  onCreate: (client: CreateClientModel) => void
 }
 
 export function CreateClientModal({ onCreate }: CreateClientModalProps) {
