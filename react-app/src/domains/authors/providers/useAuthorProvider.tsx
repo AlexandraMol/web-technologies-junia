@@ -1,0 +1,36 @@
+import { useState } from 'react'
+import type { AuthorModel, CreateAuthorModel } from '../AuthorModel'
+import axios from 'axios'
+
+export const useAuthorProvider = () => {
+  const [author, setAuthor] = useState<AuthorModel[]>([])
+
+  const loadAuthor = () => {
+    axios
+      .get('http://localhost:3000/authors')
+      .then(data => {
+        setAuthor(data.data.data)
+      })
+      .catch(err => console.error(err))
+  }
+
+  const createAuthor = (author: CreateAuthorModel) => {
+    axios
+      .post('http://localhost:3000/authors', author)
+      .then(() => {
+        loadAuthor()
+      })
+      .catch(err => console.error(err))
+  }
+
+  const deleteAuthor = (id: string) => {
+    axios
+      .delete(`http://localhost:3000/authors/${id}`)
+      .then(() => {
+        loadAuthor()
+      })
+      .catch(err => console.error(err))
+  }
+
+  return { author, loadAuthor, createAuthor, deleteAuthor }
+}
