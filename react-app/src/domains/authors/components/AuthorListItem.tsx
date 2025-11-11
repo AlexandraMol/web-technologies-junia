@@ -89,9 +89,13 @@ export function AuthorListItem({
             {`${firstName} ${lastName}`}
           </Title>
         </div>
-        <span>
-          Number of books bougth: <b>{numberOfBooks}</b>
-        </span>
+        <Text
+          type="secondary"
+          style={{ display: 'block', fontSize: 14, height: 40 }}
+        >
+          Number of books written: <b>{numberOfBooks}</b>
+        </Text>
+
         <Button
           block
           style={{
