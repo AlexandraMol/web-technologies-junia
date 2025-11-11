@@ -3,12 +3,14 @@ import { useParams } from '@tanstack/react-router'
 import { Skeleton, Empty, Typography } from 'antd'
 import { useClientDetailsProvider } from '../providers/useClientDetailsProvider'
 import { ClientDetailsCard } from '../components/ClientDetailsCard'
+import { useClientProvider } from '../providers/useClientProvider'
 
 const { Title } = Typography
 
 export function ClientDetailsPage() {
   const { clientId } = useParams({ from: '/clients/$clientId' })
   const { isLoading, client, loadClient } = useClientDetailsProvider(clientId)
+  const { updateClient } = useClientProvider()
 
   useEffect(() => {
     loadClient()
@@ -33,10 +35,7 @@ export function ClientDetailsPage() {
 
   return (
     <div style={{ maxWidth: 400, margin: '2rem auto' }}>
-      <ClientDetailsCard
-        info={client}
-        onEdit={() => console.log('Edit client')}
-      />
+      <ClientDetailsCard info={client} onUpdate={updateClient} />
     </div>
   )
 }

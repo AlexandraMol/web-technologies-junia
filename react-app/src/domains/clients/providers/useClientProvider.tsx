@@ -1,5 +1,9 @@
 import { useState } from 'react'
-import type { ClientExtendedModel, CreateClientModel } from '../ClientModel'
+import type {
+  ClientExtendedModel,
+  ClientModel,
+  CreateClientModel,
+} from '../ClientModel'
 import axios from 'axios'
 
 export const useClientProvider = () => {
@@ -23,6 +27,16 @@ export const useClientProvider = () => {
       .catch(err => console.error(err))
   }
 
+  const updateClient = (id: string, input: ClientModel) => {
+    console.log(input)
+    axios
+      .patch(`http://localhost:3000/clients/${id}`, input)
+      .then(() => {
+        loadClients()
+      })
+      .catch(err => console.error(err))
+  }
+
   const deleteClient = (id: string) => {
     axios
       .delete(`http://localhost:3000/clients/${id}`)
@@ -32,5 +46,5 @@ export const useClientProvider = () => {
       .catch(err => console.error(err))
   }
 
-  return { clients, loadClients, createClient, deleteClient }
+  return { clients, loadClients, createClient, updateClient, deleteClient }
 }
