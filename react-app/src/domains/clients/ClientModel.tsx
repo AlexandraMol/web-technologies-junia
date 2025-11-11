@@ -23,3 +23,13 @@ export type CreateClientModel = {
   email?: string
   pictureUrl?: string
 }
+
+export type ClientBooksModel = {
+  id: string
+  title: string
+  soldAt: Date
+  author: {
+    firstName: string
+    lastName: string
+  }
+}
