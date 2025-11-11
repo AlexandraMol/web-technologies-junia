@@ -1,5 +1,5 @@
 import { Outlet } from '@tanstack/react-router'
-import { AuthorList } from '../../authors/components/AuthorList'
+import { AuthorList } from '../components/AuthorList'
 
 export function AuthorPage() {
   return (

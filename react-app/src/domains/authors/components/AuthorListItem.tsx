@@ -21,7 +21,7 @@ export function AuthorListItem({
   const [modal, contextHolder] = Modal.useModal()
 
   const goToDetails = (): void => {
-    navigate({ to: '/author/$authorId', params: { authorId: id } })
+    navigate({ to: '/authors/$authorId', params: { authorId: id } })
   }
 
   const confirmDelete = (): void => {
@@ -88,12 +88,6 @@ export function AuthorListItem({
           <Title level={5} style={{ marginBottom: 4 }}>
             {`${firstName} ${lastName}`}
           </Title>
-           : (
-            <Text
-              type="secondary"
-              style={{ display: 'block', fontSize: 14, height: 40 }}
-            ></Text>
-          )
         </div>
         <span>
           Number of books bougth: <b>{numberOfBooks}</b>
