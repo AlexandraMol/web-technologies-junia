@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react'
-import type { ClientModel } from '../ClientModel'
+import type { ClientExtendedModel } from '../ClientModel'
 import { Card, Typography, Button, Avatar, Row, Modal } from 'antd'
 import { DeleteOutlined, UserOutlined } from '@ant-design/icons'
 import { useNavigate } from '@tanstack/react-router'
@@ -7,7 +7,7 @@ import { useNavigate } from '@tanstack/react-router'
 const { Text, Title } = Typography
 
 interface ClientListItemProps {
-  client: ClientModel
+  client: ClientExtendedModel
   onDelete: (id: string) => void
 }
 
