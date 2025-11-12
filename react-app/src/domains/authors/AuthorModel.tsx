@@ -20,6 +20,8 @@ export type AuthorExtendedModel = {
   }
 }
 
+export type AuthorStatsModel = Partial<AuthorExtendedModel['stats']>
+
 export type UpdateAuthorModel = {
   firstName: string
   lastName: string

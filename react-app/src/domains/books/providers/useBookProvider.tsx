@@ -1,9 +1,13 @@
 import { useState } from 'react'
-import type { BookModel, CreateBookModel, UpdateBookModel } from '../BookModel'
+import type {
+  BookExtendedModel,
+  CreateBookModel,
+  UpdateBookModel,
+} from '../BookModel'
 import axios from 'axios'
 
 export const useBookProvider = () => {
-  const [books, setBooks] = useState<BookModel[]>([])
+  const [books, setBooks] = useState<BookExtendedModel[]>([])
 
   const loadBooks = () => {
     axios

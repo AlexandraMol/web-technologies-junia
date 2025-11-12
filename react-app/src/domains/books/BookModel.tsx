@@ -1,4 +1,4 @@
-export type BookModel = {
+export type BookExtendedModel = {
   id: string
   title: string
   yearPublished: number
@@ -7,6 +7,13 @@ export type BookModel = {
     firstName: string
     lastName: string
   }
+}
+
+export type BookModel = {
+  id: string
+  title: string
+  yearPublished: number
+  pictureUrl: string
 }
 
 export type CreateBookModel = {
