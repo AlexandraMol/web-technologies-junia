@@ -1,5 +1,9 @@
 import { useState } from 'react'
-import type { AuthorModel, CreateAuthorModel } from '../AuthorModel'
+import type {
+  AuthorModel,
+  CreateAuthorModel,
+  UpdateAuthorModel,
+} from '../AuthorModel'
 import axios from 'axios'
 
 export const useAuthorProvider = () => {
@@ -23,6 +27,15 @@ export const useAuthorProvider = () => {
       .catch(err => console.error(err))
   }
 
+  const updateAuthor = (id: string, input: UpdateAuthorModel) => {
+    axios
+      .patch(`http://localhost:3000/authors/${id}`, input)
+      .then(() => {
+        loadAuthor()
+      })
+      .catch(err => console.error(err))
+  }
+
   const deleteAuthor = (id: string) => {
     axios
       .delete(`http://localhost:3000/authors/${id}`)
@@ -32,5 +45,5 @@ export const useAuthorProvider = () => {
       .catch(err => console.error(err))
   }
 
-  return { author, loadAuthor, createAuthor, deleteAuthor }
+  return { author, loadAuthor, createAuthor, updateAuthor, deleteAuthor }
 }
