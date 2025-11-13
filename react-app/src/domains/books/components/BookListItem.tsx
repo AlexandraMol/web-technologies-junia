@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { BookExtendedModel, UpdateBookModel } from '../BookModel'
+import type { BookModel, UpdateBookModel } from '../BookModel'
 import { Button, Col, Row } from 'antd'
 import {
   CheckOutlined,
@@ -10,7 +10,7 @@ import {
 import { Link } from '@tanstack/react-router'
 
 interface BookListItemProps {
-  book: BookExtendedModel
+  book: BookModel
   onDelete: (id: string) => void
   onUpdate: (id: string, input: UpdateBookModel) => void
 }
