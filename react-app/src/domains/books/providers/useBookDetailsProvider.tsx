@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import axios, {AxiosError} from 'axios'
 import type { BookModel, UpdateBookModel } from '../BookModel'
 import type { ClientModel } from '../../clients/ClientModel'
 import type { CreateSaleInput } from '../components/CreateSaleModal'
@@ -68,20 +68,29 @@ export const useBookDetailsProvider = () => {
   }
 
   const createSale = (input: CreateSaleInput): void => {
+    console.log('[createSale] sending payload:', input)
+  
     axios
       .post('http://localhost:3000/sales', input)
       .then(() => {
-        // reload buyers, count & history after creating a sale
+        // reload details (buyers + count)
         loadBookDetails(input.bookId)
       })
-      .catch(err => console.error(err))
+      .catch((err: AxiosError<any>) => {
+        console.error('[createSale] error response:', err.response?.data)
+        alert(
+          `Could not create sale.\n\nServer said: ${
+            (err.response?.data as any)?.message ?? 'Internal Server Error'
+          }`,
+        )
+      })
   }
 
   return {
     book,
     numberOfClients,
-    buyers,   // 👈 history
-    clients,  // 👈 all clients for the modal
+    buyers,   
+    clients,  
     isLoading,
     loadBookDetails,
     updateBook,

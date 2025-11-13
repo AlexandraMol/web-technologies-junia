@@ -1,4 +1,3 @@
-// src/domains/books/components/CreateSaleModal.tsx
 import type { ReactElement } from 'react'
 import { useState } from 'react'
 import { Button, Modal, Space, Input, Select, DatePicker } from 'antd'
@@ -8,7 +7,7 @@ import type { ClientModel } from '../../clients/ClientModel'
 export type CreateSaleInput = {
   bookId: string
   clientId: string
-  date: string // 'YYYY-MM-DD'
+  soldAt: string 
 }
 
 interface CreateSaleModalProps {
@@ -26,7 +25,7 @@ export function CreateSaleModal({
 }: CreateSaleModalProps): ReactElement {
   const [isOpen, setIsOpen] = useState(false)
   const [clientId, setClientId] = useState('')
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState('') 
 
   const onClose = (): void => {
     setIsOpen(false)
@@ -35,25 +34,27 @@ export function CreateSaleModal({
   }
 
   const handleOk = (): void => {
-    onCreate({ bookId, clientId, date })
+    const soldAt = date ? new Date(date).toISOString() : new Date().toISOString()
+
+    onCreate({
+      bookId,
+      clientId,
+      soldAt,
+    })
     onClose()
   }
 
   const isOkDisabled = !clientId.trim().length || !date.trim().length
 
-  // 👉 helper to safely get id + full name whatever the shape is
   const clientOptions = clients
     .map(c => {
       const anyClient = c as any
-      const inner = anyClient.client ?? anyClient // support {client:{...}} or flat
-
+      const inner = anyClient.client ?? anyClient
       const id: string | undefined = inner.id
       const first: string = inner.firstName ?? ''
       const last: string = inner.lastName ?? ''
-      const label = `${first} ${last}`.trim() || 'Unnamed client'
-
       if (!id) return null
-      return { label, value: id }
+      return { label: `${first} ${last}`.trim() || 'Unnamed client', value: id }
     })
     .filter((opt): opt is { label: string; value: string } => Boolean(opt))
 
@@ -82,10 +83,8 @@ export function CreateSaleModal({
         okButtonProps={{ disabled: isOkDisabled }}
       >
         <Space direction="vertical" style={{ width: '100%' }}>
-          {/* Book title (read only) */}
           <Input value={bookTitle} readOnly />
 
-          {/* Client select */}
           <Select
             placeholder="Select client*"
             value={clientId || undefined}
@@ -95,7 +94,6 @@ export function CreateSaleModal({
             optionFilterProp="label"
           />
 
-          {/* Date of sale */}
           <DatePicker
             style={{ width: '100%' }}
             placeholder="Select date*"

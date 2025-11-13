@@ -124,7 +124,6 @@ export function BookDetails({
       </Button>
 
       <Row gutter={24}>
-        {/* LEFT COLUMN: cover + buyers info + create sale */}
         <Col xs={24} md={8}>
           <Card
             style={{
@@ -156,8 +155,6 @@ export function BookDetails({
             />
           </Card>
         </Col>
-
-        {/* RIGHT COLUMN: book information */}
         <Col xs={24} md={16}>
           <Card
             style={{
@@ -171,7 +168,6 @@ export function BookDetails({
               Book information
             </Title>
 
-            {/* Title */}
             <div style={{ marginBottom: 16 }}>
               <Text strong>Title</Text>
               {editing ? (
@@ -185,7 +181,6 @@ export function BookDetails({
               )}
             </div>
 
-            {/* Author + See Author button */}
             <div style={{ marginBottom: 16 }}>
               <Text strong>Author</Text>
               <div
@@ -217,7 +212,6 @@ export function BookDetails({
               </div>
             </div>
 
-            {/* Year – full width */}
             <div style={{ marginBottom: 16 }}>
               <Text strong>Year of publication</Text>
               {editing ? (
@@ -231,7 +225,6 @@ export function BookDetails({
               )}
             </div>
 
-            {/* Actions */}
             {editing ? (
               <div
                 style={{
@@ -288,7 +281,6 @@ export function BookDetails({
         </Col>
       </Row>
 
-      {/* SHOPPING HISTORY */}
       <Card
         style={{
           borderRadius: 14,
@@ -301,30 +293,69 @@ export function BookDetails({
           Shopping history
         </Title>
         <List
-          dataSource={buyers}
-          locale={{ emptyText: 'No purchases yet' }}
-          renderItem={client => (
-            <List.Item
-              style={{
-                borderRadius: 12,
-                border: '1px solid #f0f0f0',
-                padding: 16,
-                marginBottom: 12,
-              }}
-            >
-              <div style={{ width: '100%' }}>
-                <Text strong style={{ display: 'block' }}>
-                  {client.firstName} {client.lastName}
-                </Text>
-                {(client as any).email && (
-                  <Text type="secondary" style={{ display: 'block' }}>
-                    {(client as any).email}
-                  </Text>
-                )}
-              </div>
-            </List.Item>
+  dataSource={buyers}
+  locale={{ emptyText: 'No purchases yet' }}
+  renderItem={buyer => {
+    const anyBuyer = buyer as any
+
+    // Try several common shapes: soldAt, saleDate, date, sale.soldAt
+    const rawDate =
+      anyBuyer.soldAt ??
+      anyBuyer.saleDate ??
+      anyBuyer.date ??
+      (anyBuyer.sale && anyBuyer.sale.soldAt)
+
+    const formattedDate =
+      rawDate != null
+        ? new Date(rawDate).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          })
+        : null
+
+    const firstName = anyBuyer.firstName ?? anyBuyer.client?.firstName ?? ''
+    const lastName = anyBuyer.lastName ?? anyBuyer.client?.lastName ?? ''
+    const email =
+      anyBuyer.email ??
+      anyBuyer.client?.email ??
+      undefined
+
+    return (
+      <List.Item
+        style={{
+          borderRadius: 12,
+          border: '1px solid #f0f0f0',
+          padding: 16,
+          marginBottom: 12,
+        }}
+      >
+        <div style={{ width: '100%' }}>
+          <Text strong style={{ display: 'block' }}>
+            {firstName} {lastName}
+          </Text>
+
+          {email && (
+            <Text type="secondary" style={{ display: 'block' }}>
+              {email}
+            </Text>
           )}
-        />
+
+          {formattedDate && (
+            <Text
+              type="secondary"
+              style={{ display: 'block', marginTop: 4 }}
+            >
+              Date of purchase: <b>{formattedDate}</b>
+            </Text>
+          )}
+        </div>
+      </List.Item>
+    )
+  }}
+/>
+
+
       </Card>
     </div>
   )
