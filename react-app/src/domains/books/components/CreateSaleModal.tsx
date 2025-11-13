@@ -1,0 +1,110 @@
+// src/domains/books/components/CreateSaleModal.tsx
+import type { ReactElement } from 'react'
+import { useState } from 'react'
+import { Button, Modal, Space, Input, Select, DatePicker } from 'antd'
+import { ShoppingCartOutlined } from '@ant-design/icons'
+import type { ClientModel } from '../../clients/ClientModel'
+
+export type CreateSaleInput = {
+  bookId: string
+  clientId: string
+  date: string // 'YYYY-MM-DD'
+}
+
+interface CreateSaleModalProps {
+  bookId: string
+  bookTitle: string
+  clients: ClientModel[]
+  onCreate: (input: CreateSaleInput) => void
+}
+
+export function CreateSaleModal({
+  bookId,
+  bookTitle,
+  clients,
+  onCreate,
+}: CreateSaleModalProps): ReactElement {
+  const [isOpen, setIsOpen] = useState(false)
+  const [clientId, setClientId] = useState('')
+  const [date, setDate] = useState('')
+
+  const onClose = (): void => {
+    setIsOpen(false)
+    setClientId('')
+    setDate('')
+  }
+
+  const handleOk = (): void => {
+    onCreate({ bookId, clientId, date })
+    onClose()
+  }
+
+  const isOkDisabled = !clientId.trim().length || !date.trim().length
+
+  // 👉 helper to safely get id + full name whatever the shape is
+  const clientOptions = clients
+    .map(c => {
+      const anyClient = c as any
+      const inner = anyClient.client ?? anyClient // support {client:{...}} or flat
+
+      const id: string | undefined = inner.id
+      const first: string = inner.firstName ?? ''
+      const last: string = inner.lastName ?? ''
+      const label = `${first} ${last}`.trim() || 'Unnamed client'
+
+      if (!id) return null
+      return { label, value: id }
+    })
+    .filter((opt): opt is { label: string; value: string } => Boolean(opt))
+
+  return (
+    <>
+      <Button
+        block
+        type="primary"
+        icon={<ShoppingCartOutlined />}
+        style={{
+          marginTop: 16,
+          borderRadius: 8,
+          height: 44,
+          fontWeight: 500,
+        }}
+        onClick={() => setIsOpen(true)}
+      >
+        Create a Sale with this Book
+      </Button>
+
+      <Modal
+        open={isOpen}
+        title="Create a new sale"
+        onCancel={onClose}
+        onOk={handleOk}
+        okButtonProps={{ disabled: isOkDisabled }}
+      >
+        <Space direction="vertical" style={{ width: '100%' }}>
+          {/* Book title (read only) */}
+          <Input value={bookTitle} readOnly />
+
+          {/* Client select */}
+          <Select
+            placeholder="Select client*"
+            value={clientId || undefined}
+            onChange={value => setClientId(value)}
+            options={clientOptions}
+            showSearch
+            optionFilterProp="label"
+          />
+
+          {/* Date of sale */}
+          <DatePicker
+            style={{ width: '100%' }}
+            placeholder="Select date*"
+            onChange={(_, dateString) =>
+              setDate(Array.isArray(dateString) ? dateString[0] ?? '' : dateString)
+            }
+          />
+        </Space>
+      </Modal>
+    </>
+  )
+}
