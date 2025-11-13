@@ -1,25 +1,22 @@
 import { useState } from 'react'
 import type {
   BookModel,
+  BookWithNumberOfClients,
   CreateBookModel,
   UpdateBookModel,
   GetBooksResponse,
-  BookWithNumberOfClients,
 } from '../BookModel'
 import axios from 'axios'
 
 export const useBookProvider = () => {
-  const [books, setBooks] = useState<BookModel[]>([])
+  // store the full objects: { book, numberOfClients }
+  const [books, setBooks] = useState<BookWithNumberOfClients[]>([])
 
   const loadBooks = () => {
     axios
       .get<GetBooksResponse>('http://localhost:3000/books')
       .then(res => {
-        const raw: BookWithNumberOfClients[] = res.data.data
-
-        const booksOnly: BookModel[] = raw.map(entry => entry.book)
-
-        setBooks(booksOnly)
+        setBooks(res.data.data)
       })
       .catch(err => console.error(err))
   }
@@ -27,21 +24,29 @@ export const useBookProvider = () => {
   const createBook = (book: CreateBookModel) => {
     axios
       .post('http://localhost:3000/books', book)
-      .then(loadBooks)
-      .catch(err => console.error(err))
+      .then(() => {
+        loadBooks()
+      })
+      .catch(err => {
+        console.error('Create book error:', err.response?.data ?? err)
+      })
   }
 
   const updateBook = (id: string, input: UpdateBookModel) => {
     axios
       .patch(`http://localhost:3000/books/${id}`, input)
-      .then(loadBooks)
+      .then(() => {
+        loadBooks()
+      })
       .catch(err => console.error(err))
   }
 
   const deleteBook = (id: string) => {
     axios
       .delete(`http://localhost:3000/books/${id}`)
-      .then(loadBooks)
+      .then(() => {
+        loadBooks()
+      })
       .catch(err => console.error(err))
   }
 

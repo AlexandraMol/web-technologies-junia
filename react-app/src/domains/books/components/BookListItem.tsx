@@ -1,95 +1,137 @@
-import { useState } from 'react'
+import type { ReactElement } from 'react'
 import type { BookModel, UpdateBookModel } from '../BookModel'
-import { Button, Col, Row } from 'antd'
-import {
-  CheckOutlined,
-  CloseOutlined,
-  DeleteOutlined,
-  EditOutlined,
-} from '@ant-design/icons'
-import { Link } from '@tanstack/react-router'
+import { Card, Typography, Button, Modal } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
+import { useNavigate } from '@tanstack/react-router'
+
+const { Text, Title } = Typography
 
 interface BookListItemProps {
   book: BookModel
+  numberOfClients: number
   onDelete: (id: string) => void
-  onUpdate: (id: string, input: UpdateBookModel) => void
+  onUpdate?: (id: string, input: UpdateBookModel) => void
 }
 
-export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
-  const [title, setTitle] = useState(book.title)
-  const [isEditing, setIsEditing] = useState(false)
+export function BookListItem({
+  book,
+  numberOfClients,
+  onDelete,
+}: BookListItemProps): ReactElement {
+  const navigate = useNavigate()
+  const { id, title, yearPublished, pictureUrl, author } = book
+  const [modal, contextHolder] = Modal.useModal()
 
-  const onCancelEdit = () => {
-    setIsEditing(false)
-    setTitle(book.title)
+  const goToDetails = (): void => {
+    navigate({ to: '/books/$bookId', params: { bookId: id } })
   }
 
-  const onValidateEdit = () => {
-    onUpdate(book.id, { title })
-    setIsEditing(false)
+  const confirmDelete = (): void => {
+    modal.confirm({
+      title: 'Delete this book?',
+      content: `Are you sure you want to delete "${title}"? This action cannot be undone.`,
+      okText: 'Delete',
+      cancelText: 'Cancel',
+      okButtonProps: { danger: true },
+      onOk: () => onDelete(id),
+    })
   }
+
+  const buyersLabel =
+    numberOfClients === 1
+      ? 'Bought by 1 person'
+      : `Bought by ${numberOfClients} people`
 
   return (
-    <Row
-      style={{
-        width: '100%',
-        height: '50px',
-        borderRadius: '10px',
-        backgroundColor: '#EEEEEE',
-        margin: '1rem 0',
-        padding: '.25rem',
-        display: 'flex',
-        justifyContent: 'space-between',
-      }}
-    >
-      <Col span={12} style={{ margin: 'auto 0' }}>
-        {isEditing ? (
-          <input value={title} onChange={e => setTitle(e.target.value)} />
-        ) : (
-          <Link
-            to={`/books/$bookId`}
-            params={{ bookId: book.id }}
-            style={{
-              margin: 'auto 0',
-              textAlign: 'left',
-            }}
-          >
-            <span style={{ fontWeight: 'bold' }}>{book.title}</span> -{' '}
-            {book.yearPublished}
-          </Link>
-        )}
-      </Col>
-      <Col span={9} style={{ margin: 'auto 0' }}>
-        by <span style={{ fontWeight: 'bold' }}>{book.author.firstName}</span>{' '}
-        <span style={{ fontWeight: 'bold' }}>{book.author.lastName}</span>
-      </Col>
-      <Col
-        span={3}
+    <>
+      {contextHolder}
+      <Card
+        hoverable
+        onClick={goToDetails}
         style={{
-          alignItems: 'right',
+          borderRadius: 14,
+          boxShadow: '0 3px 8px rgba(0,0,0,0.06)',
+          minWidth: 260,
+          minHeight: 360,
           display: 'flex',
-          gap: '.25rem',
-          margin: 'auto 0',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+        bodyStyle={{
+          padding: 24,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 16,
         }}
       >
-        {isEditing ? (
-          <>
-            <Button type="primary" onClick={onValidateEdit}>
-              <CheckOutlined />
-            </Button>
-            <Button onClick={onCancelEdit}>
-              <CloseOutlined />
-            </Button>
-          </>
-        ) : (
-          <Button type="primary" onClick={() => setIsEditing(true)}>
-            <EditOutlined />
-          </Button>
-        )}
-        <Button type="primary" danger onClick={() => onDelete(book.id)}>
-          <DeleteOutlined />
+        {/* COVER + DELETE */}
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            marginBottom: 8,
+          }}
+        >
+          <img
+            src={pictureUrl}
+            alt={title}
+            style={{
+              width: '70%',
+              height: 140,
+              objectFit: 'cover',
+              borderRadius: 10,
+            }}
+          />
+          <Button
+            type="text"
+            danger
+            icon={<DeleteOutlined />}
+            style={{ fontSize: 18 }}
+            onClick={e => {
+              e.stopPropagation()
+              confirmDelete()
+            }}
+          />
+        </div>
+
+        {/* TITLE + AUTHOR */}
+        <div style={{ textAlign: 'center' }}>
+          <Title level={5} style={{ marginBottom: 4 }}>
+            {title}
+          </Title>
+          <Text type="secondary" style={{ display: 'block', fontSize: 14 }}>
+            {author.firstName} {author.lastName}
+          </Text>
+        </div>
+
+        {/* YEAR + BUYERS */}
+        <Text type="secondary" style={{ fontSize: 13 }}>
+          Published in <b>{yearPublished}</b>
+        </Text>
+        <Text type="secondary" style={{ fontSize: 13 }}>
+          {buyersLabel}
+        </Text>
+
+        {/* VIEW DETAILS BUTTON */}
+        <Button
+          block
+          style={{
+            marginTop: 8,
+            borderRadius: 8,
+            fontWeight: 500,
+            height: 40,
+          }}
+          onClick={e => {
+            e.stopPropagation()
+            goToDetails()
+          }}
+        >
+          View Details
         </Button>
-      </Col>
-    </Row>
+      </Card>
+    </>
   )
 }
