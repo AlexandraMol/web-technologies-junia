@@ -8,7 +8,6 @@ import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
 import { BookDetails } from '../components/BookDetails'
 
 export function BookPageDetails(): ReactElement {
-  // always call hooks at the top – never inside if/return
   const { bookId } = useParams({ from: '/books/$bookId' })
 
   const {
@@ -40,8 +39,8 @@ export function BookPageDetails(): ReactElement {
     <BookDetails
       book={book}
       numberOfClients={numberOfClients}
-      buyers={buyers}       // history
-      clients={clients}     // all clients for modal
+      buyers={buyers}       
+      clients={clients}     
       onCreateSale={createSale}
       onUpdate={updateBook}
     />

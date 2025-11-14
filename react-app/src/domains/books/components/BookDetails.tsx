@@ -41,7 +41,6 @@ export function BookDetails({
 }: BookDetailsProps): ReactElement {
   const navigate = useNavigate()
 
-  // loading guard – don't destructure undefined
   if (!book) {
     return (
       <div style={{ padding: 24 }}>
@@ -59,7 +58,6 @@ export function BookDetails({
 
   const { id, title, yearPublished, pictureUrl, author } = book
 
-  // try to find an authorId either on the book or inside author
   const authorId =
     (book as any).authorId ?? (author as any).id ?? undefined
 
@@ -68,12 +66,10 @@ export function BookDetails({
     navigate({ to: '/authors/$authorId', params: { authorId } })
   }
 
-  // editing state (similar to AuthorDetailsCard)
   const [editing, setEditing] = useState(false)
   const [localTitle, setLocalTitle] = useState(title ?? '')
   const [localYear, setLocalYear] = useState(yearPublished?.toString() ?? '')
 
-  // when book changes from the outside, reset local state if not editing
   useEffect(() => {
     if (!editing) {
       setLocalTitle(title ?? '')
@@ -114,7 +110,6 @@ export function BookDetails({
 
   return (
     <div style={{ padding: 24 }}>
-      {/* Back button – outlined pill */}
       <Button
         icon={<ArrowLeftOutlined />}
         onClick={() => navigate({ to: '/books' })}
@@ -298,21 +293,7 @@ export function BookDetails({
   renderItem={buyer => {
     const anyBuyer = buyer as any
 
-    // Try several common shapes: soldAt, saleDate, date, sale.soldAt
-    const rawDate =
-      anyBuyer.soldAt ??
-      anyBuyer.saleDate ??
-      anyBuyer.date ??
-      (anyBuyer.sale && anyBuyer.sale.soldAt)
-
-    const formattedDate =
-      rawDate != null
-        ? new Date(rawDate).toLocaleDateString(undefined, {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })
-        : null
+    
 
     const firstName = anyBuyer.firstName ?? anyBuyer.client?.firstName ?? ''
     const lastName = anyBuyer.lastName ?? anyBuyer.client?.lastName ?? ''
@@ -341,14 +322,7 @@ export function BookDetails({
             </Text>
           )}
 
-          {formattedDate && (
-            <Text
-              type="secondary"
-              style={{ display: 'block', marginTop: 4 }}
-            >
-              Date of purchase: <b>{formattedDate}</b>
-            </Text>
-          )}
+          
         </div>
       </List.Item>
     )

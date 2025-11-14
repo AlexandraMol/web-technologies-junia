@@ -1,5 +1,6 @@
 import './App.css'
 import type { ReactNode } from 'react'
+import { useEffect } from 'react'
 import { Card, Col, Row, Typography, Button } from 'antd'
 import {
   UserOutlined,
@@ -8,6 +9,14 @@ import {
   ShoppingCartOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
+import axios from 'axios'
+
+import { useAuthorProvider } from './domains/authors/providers/useAuthorProvider'
+import { useBookProvider } from './domains/books/providers/useBookProvider'
+import { useClientProvider } from './domains/clients/providers/useClientProvider'
+
+import { CreateGlobalSaleModal } from './domains/sales/components/CreateGlobalSaleModal'
+import type { CreateSaleInput } from './domains/books/components/CreateSaleModal'
 
 type CardSpec = {
   key: 'clients' | 'books' | 'authors' | 'sale'
@@ -57,6 +66,33 @@ const CARDS: Readonly<CardSpec[]> = [
 const { Title, Paragraph } = Typography
 
 function App() {
+  const { author: authors, loadAuthor } = useAuthorProvider()
+
+  const { books: rawBooks, loadBooks } = useBookProvider()
+  const { clients: rawClients, loadClients } = useClientProvider()
+
+  useEffect(() => {
+    loadAuthor()
+    loadBooks()
+    loadClients()
+  }, [])
+
+  const plainBooks = rawBooks.map((b: any) => b.book ?? b)
+
+  const plainClients = rawClients.map((c: any) => c.client ?? c)
+
+  const createSale = async (input: CreateSaleInput) => {
+    const soldAt = input.date
+      ? new Date(input.date).toISOString()
+      : new Date().toISOString()
+
+    await axios.post('http://localhost:3000/sales', {
+      bookId: input.bookId,
+      clientId: input.clientId,
+      soldAt,
+    })
+  }
+
   return (
     <div style={{ maxWidth: 1120, margin: '0 auto' }}>
       <div style={{ marginBottom: 32 }}>
@@ -127,15 +163,24 @@ function App() {
                 {description}
               </Typography.Paragraph>
 
-              <Link to={to}>
-                <Button
-                  type={highlight ? 'default' : 'primary'}
-                  block
-                  style={highlight ? { color: '#141414' } : undefined}
-                >
-                  {cta}
-                </Button>
-              </Link>
+              {key === 'sale' ? (
+                <CreateGlobalSaleModal
+                  authors={authors}
+                  books={plainBooks}     
+                  clients={plainClients} 
+                  onCreateSale={createSale}
+                />
+              ) : (
+                <Link to={to!}>
+                  <Button
+                    type={highlight ? 'default' : 'primary'}
+                    block
+                    style={highlight ? { color: '#141400' } : undefined}
+                  >
+                    {cta}
+                  </Button>
+                </Link>
+              )}
             </Card>
           </Col>
         ))}

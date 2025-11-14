@@ -7,7 +7,7 @@ import type { ClientModel } from '../../clients/ClientModel'
 export type CreateSaleInput = {
   bookId: string
   clientId: string
-  soldAt: string 
+  date: string 
 }
 
 interface CreateSaleModalProps {
@@ -39,7 +39,7 @@ export function CreateSaleModal({
     onCreate({
       bookId,
       clientId,
-      soldAt,
+      date,
     })
     onClose()
   }
