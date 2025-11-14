@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import type {
-  BookModel,
   BookWithNumberOfClients,
   CreateBookModel,
   UpdateBookModel,

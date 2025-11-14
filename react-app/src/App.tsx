@@ -77,9 +77,9 @@ function App() {
     loadClients()
   }, [])
 
-  const plainBooks = rawBooks.map((b: any) => b.book ?? b)
+  const plainBooks = rawBooks.map(b => ('book' in b ? b.book : b))
 
-  const plainClients = rawClients.map((c: any) => c.client ?? c)
+  const plainClients = rawClients.map(c => ('client' in c ? c.client : c))
 
   const createSale = async (input: CreateSaleInput) => {
     const soldAt = input.date

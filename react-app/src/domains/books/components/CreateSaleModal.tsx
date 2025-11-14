@@ -34,10 +34,6 @@ export function CreateSaleModal({
   }
 
   const handleOk = (): void => {
-    const soldAt = date
-      ? new Date(date).toISOString()
-      : new Date().toISOString()
-
     onCreate({
       bookId,
       clientId,

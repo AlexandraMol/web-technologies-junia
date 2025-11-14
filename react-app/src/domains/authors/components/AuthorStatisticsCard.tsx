@@ -103,7 +103,7 @@ export function AuthorStatisticsCard({
                   {item.label}
                 </Text>
                 <Statistic
-                  value={item.value as any}
+                  value={item.value}
                   valueStyle={{ fontSize: 18, fontWeight: 600, marginTop: 4 }}
                 />
               </div>

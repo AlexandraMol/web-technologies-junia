@@ -14,6 +14,10 @@ type ClientListResponse = {
   data: ClientModel[]
 }
 
+interface ApiError {
+  message: string
+}
+
 export const useBookDetailsProvider = () => {
   const [book, setBook] = useState<BookModel | null>(null)
   const [numberOfClients, setNumberOfClients] = useState(0)
@@ -74,13 +78,12 @@ export const useBookDetailsProvider = () => {
         // reload details (buyers + count)
         loadBookDetails(input.bookId)
       })
-      .catch((err: AxiosError<any>) => {
+      .catch((err: AxiosError<ApiError>) => {
         console.error('[createSale] error response:', err.response?.data)
-        alert(
-          `Could not create sale.\n\nServer said: ${
-            (err.response?.data as any)?.message ?? 'Internal Server Error'
-          }`,
-        )
+
+        const msg = err.response?.data?.message ?? 'Internal Server Error'
+
+        alert(`Could not create sale.\n\nServer said: ${msg}`)
       })
   }
 
