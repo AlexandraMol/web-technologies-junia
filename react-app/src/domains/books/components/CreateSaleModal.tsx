@@ -9,11 +9,12 @@ export type CreateSaleInput = {
   clientId: string
   date: string
 }
+type ClientLike = ClientModel | { client: ClientModel }
 
 interface CreateSaleModalProps {
   bookId: string
   bookTitle: string
-  clients: ClientModel[]
+  clients: ClientLike[]
   onCreate: (input: CreateSaleInput) => void
 }
 
@@ -44,17 +45,16 @@ export function CreateSaleModal({
 
   const isOkDisabled = !clientId.trim().length || !date.trim().length
 
-  const clientOptions = clients
-    .map(c => {
-      const anyClient = c as any
-      const inner = anyClient.client ?? anyClient
-      const id: string | undefined = inner.id
-      const first: string = inner.firstName ?? ''
-      const last: string = inner.lastName ?? ''
-      if (!id) return null
-      return { label: `${first} ${last}`.trim() || 'Unnamed client', value: id }
-    })
-    .filter((opt): opt is { label: string; value: string } => Boolean(opt))
+  const clientOptions = clients.map(clientLike => {
+    const c = 'client' in clientLike ? clientLike.client : clientLike
+
+    const fullName = `${c.firstName} ${c.lastName}`.trim() || 'Unnamed client'
+
+    return {
+      label: fullName,
+      value: c.id,
+    }
+  })
 
   return (
     <>
@@ -83,7 +83,7 @@ export function CreateSaleModal({
         <Space direction="vertical" style={{ width: '100%' }}>
           <Input value={bookTitle} readOnly />
 
-          <Select
+          <Select<string>
             placeholder="Select client*"
             value={clientId || undefined}
             onChange={value => setClientId(value)}

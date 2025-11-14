@@ -1,9 +1,11 @@
 export type BookAuthorModel = {
+  id: string
   firstName: string
   lastName: string
 }
 
 export type BookModel = {
+  authorId: string
   id: string
   title: string
   author: BookAuthorModel

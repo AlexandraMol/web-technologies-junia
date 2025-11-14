@@ -10,11 +10,13 @@ import { CreateSaleModal, type CreateSaleInput } from './CreateSaleModal'
 
 const { Title, Text } = Typography
 
+type Buyer = ClientModel | { client: ClientModel }
+
 interface BookDetailsProps {
-  book?: BookModel | null // can be undefined/null while loading
+  book?: BookModel | null
   numberOfClients: number
   clients: ClientModel[]
-  buyers: ClientModel[]
+  buyers: Buyer[]
   onCreateSale: (input: CreateSaleInput) => void
   onUpdate: (id: string, input: UpdateBookModel) => void
 }
@@ -41,6 +43,19 @@ export function BookDetails({
 }: BookDetailsProps): ReactElement {
   const navigate = useNavigate()
 
+  const [editing, setEditing] = useState(false)
+  const [localTitle, setLocalTitle] = useState(book?.title ?? '')
+  const [localYear, setLocalYear] = useState(
+    book?.yearPublished?.toString() ?? '',
+  )
+
+  useEffect(() => {
+    if (!editing) {
+      setLocalTitle(book?.title ?? '')
+      setLocalYear(book?.yearPublished?.toString() ?? '')
+    }
+  }, [book, editing])
+
   if (!book) {
     return (
       <div style={{ padding: 24 }}>
@@ -58,27 +73,16 @@ export function BookDetails({
 
   const { id, title, yearPublished, pictureUrl, author } = book
 
-  const authorId = (book as any).authorId ?? (author as any).id ?? undefined
+  const authorId = book.authorId ?? author?.id
 
   const goToAuthor = (): void => {
     if (!authorId) return
     navigate({ to: '/authors/$authorId', params: { authorId } })
   }
 
-  const [editing, setEditing] = useState(false)
-  const [localTitle, setLocalTitle] = useState(title ?? '')
-  const [localYear, setLocalYear] = useState(yearPublished?.toString() ?? '')
-
-  useEffect(() => {
-    if (!editing) {
-      setLocalTitle(title ?? '')
-      setLocalYear(yearPublished?.toString() ?? '')
-    }
-  }, [book, title, yearPublished, editing])
-
   const handleSave = (): void => {
-    const t = (localTitle || '').trim()
-    const y = (localYear || '').trim()
+    const t = localTitle.trim()
+    const y = localYear.trim()
 
     if (!t || !y) {
       alert('You must fill all the fields!')
@@ -250,8 +254,8 @@ export function BookDetails({
                   style={{ height: 44, borderRadius: 8 }}
                   onClick={() => {
                     setEditing(false)
-                    setLocalTitle(title ?? '')
-                    setLocalYear(yearPublished?.toString() ?? '')
+                    setLocalTitle(book.title ?? '')
+                    setLocalYear(book.yearPublished?.toString() ?? '')
                   }}
                 >
                   Cancel
@@ -293,13 +297,7 @@ export function BookDetails({
           dataSource={buyers}
           locale={{ emptyText: 'No purchases yet' }}
           renderItem={buyer => {
-            const anyBuyer = buyer as any
-
-            const firstName =
-              anyBuyer.firstName ?? anyBuyer.client?.firstName ?? ''
-            const lastName =
-              anyBuyer.lastName ?? anyBuyer.client?.lastName ?? ''
-            const email = anyBuyer.email ?? anyBuyer.client?.email ?? undefined
+            const client = 'client' in buyer ? buyer.client : buyer
 
             return (
               <List.Item
@@ -312,12 +310,12 @@ export function BookDetails({
               >
                 <div style={{ width: '100%' }}>
                   <Text strong style={{ display: 'block' }}>
-                    {firstName} {lastName}
+                    {client.firstName} {client.lastName}
                   </Text>
 
-                  {email && (
+                  {client.email && (
                     <Text type="secondary" style={{ display: 'block' }}>
-                      {email}
+                      {client.email}
                     </Text>
                   )}
                 </div>

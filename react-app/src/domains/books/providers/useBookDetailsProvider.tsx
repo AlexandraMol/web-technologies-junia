@@ -73,7 +73,11 @@ export const useBookDetailsProvider = () => {
     console.log('[createSale] sending payload:', input)
 
     axios
-      .post('http://localhost:3000/sales', input)
+      .post('http://localhost:3000/sales', {
+        bookId: input.bookId,
+        clientId: input.clientId,
+        soldAt: input.date,
+      })
       .then(() => {
         // reload details (buyers + count)
         loadBookDetails(input.bookId)
