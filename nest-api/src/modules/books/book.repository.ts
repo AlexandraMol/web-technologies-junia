@@ -12,9 +12,9 @@ import {
 } from './book.model';
 import { BookEntity, BookId } from './book.entity';
 import { SaleEntity } from '../sales/sale.entity';
-import { raw } from 'express';
 import { ClientModel } from '../clients/client.model';
 import { ClientEntity } from '../clients/client.entity';
+import { BookWithClientsRaw } from './book.module';
 
 @Injectable()
 export class BookRepository {
@@ -120,7 +120,7 @@ export class BookRepository {
     const qb = this.buildBooksWithNumberOfClientsQuery(input);
 
     const [entities, totalCount] = await qb.getManyAndCount();
-    const raw = await qb.getRawMany();
+    const raw = await qb.getRawMany<BookWithClientsRaw>();
 
     const books = this.mapBooksWithNumberOfClients(entities, raw);
 
@@ -205,7 +205,7 @@ export class BookRepository {
 
   private mapBooksWithNumberOfClients(
     entities: BookEntity[],
-    raw: any[],
+    raw: BookWithClientsRaw[],
   ): BookWithNumberOfClients[] {
     return entities.map((entity, index) => ({
       book: {

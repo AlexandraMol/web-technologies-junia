@@ -58,3 +58,7 @@ export type AuthorStatsModel = {
 export type AuthorWithStatsModel = AuthorModel & {
   stats: AuthorStatsModel;
 };
+
+export type AuthorWithBooksCountRaw = {
+  booksCount: string;
+};

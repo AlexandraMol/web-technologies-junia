@@ -1,12 +1,4 @@
-import {
-  IsDate,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Max,
-  Min,
-} from 'class-validator';
+import { IsDate, IsUUID } from 'class-validator';
 import type { BookId } from '../books/book.entity';
 import type { ClientId } from '../clients/client.entity';
 

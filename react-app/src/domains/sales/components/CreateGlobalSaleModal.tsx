@@ -36,7 +36,6 @@ export function CreateGlobalSaleModal({
     setDate('')
   }
 
-
   const authorOptions = useMemo(
     () =>
       authors.map(a => ({
@@ -57,9 +56,7 @@ export function CreateGlobalSaleModal({
 
     return books
       .filter(
-        b =>
-          b.author.firstName === firstName &&
-          b.author.lastName === lastName,
+        b => b.author.firstName === firstName && b.author.lastName === lastName,
       )
       .map(b => ({
         label: b.title,
@@ -76,8 +73,7 @@ export function CreateGlobalSaleModal({
     [clients],
   )
 
-  const isOkDisabled =
-    !authorId || bookIds.length === 0 || !clientId || !date
+  const isOkDisabled = !authorId || bookIds.length === 0 || !clientId || !date
 
   const handleOk = async (): Promise<void> => {
     await Promise.all(
@@ -151,7 +147,9 @@ export function CreateGlobalSaleModal({
             style={{ width: '100%' }}
             placeholder="Select date*"
             onChange={(_, dateString) =>
-              setDate(Array.isArray(dateString) ? dateString[0] ?? '' : dateString)
+              setDate(
+                Array.isArray(dateString) ? (dateString[0] ?? '') : dateString,
+              )
             }
           />
         </Space>

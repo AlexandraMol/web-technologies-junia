@@ -11,7 +11,6 @@ import {
 import { AuthorService } from './author.service';
 import { CreateAuthorDto, GetAuthorsDto, UpdateAuthorDto } from './author.dto';
 import {
-  GetAuthorsModel,
   GetAuthorsWithNumberOfBooksModel,
   ListOfBooksByAuthorModel,
 } from './author.model';

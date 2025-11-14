@@ -7,7 +7,7 @@ import type { ClientModel } from '../../clients/ClientModel'
 export type CreateSaleInput = {
   bookId: string
   clientId: string
-  date: string 
+  date: string
 }
 
 interface CreateSaleModalProps {
@@ -25,7 +25,7 @@ export function CreateSaleModal({
 }: CreateSaleModalProps): ReactElement {
   const [isOpen, setIsOpen] = useState(false)
   const [clientId, setClientId] = useState('')
-  const [date, setDate] = useState('') 
+  const [date, setDate] = useState('')
 
   const onClose = (): void => {
     setIsOpen(false)
@@ -34,7 +34,9 @@ export function CreateSaleModal({
   }
 
   const handleOk = (): void => {
-    const soldAt = date ? new Date(date).toISOString() : new Date().toISOString()
+    const soldAt = date
+      ? new Date(date).toISOString()
+      : new Date().toISOString()
 
     onCreate({
       bookId,
@@ -98,7 +100,9 @@ export function CreateSaleModal({
             style={{ width: '100%' }}
             placeholder="Select date*"
             onChange={(_, dateString) =>
-              setDate(Array.isArray(dateString) ? dateString[0] ?? '' : dateString)
+              setDate(
+                Array.isArray(dateString) ? (dateString[0] ?? '') : dateString,
+              )
             }
           />
         </Space>

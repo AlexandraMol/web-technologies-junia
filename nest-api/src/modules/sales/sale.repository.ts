@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm/dist/common/typeorm.decorators
 import { DataSource, Repository } from 'typeorm';
 import { SaleEntity } from './sale.entity';
 import { BookEntity } from '../books/book.entity';
-import { ClientEntity, ClientId } from '../clients/client.entity';
+import { ClientEntity } from '../clients/client.entity';
 import { CreateSaleModel, SaleModel } from './sale.model';
 
 @Injectable()

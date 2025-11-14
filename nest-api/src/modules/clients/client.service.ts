@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ClientRepository } from './client.repository';
 import {
   ClientModel,
@@ -9,7 +9,6 @@ import {
   ListOfBooksByClientModel,
   UpdateClientModel,
 } from './client.model';
-import { Filter } from 'typeorm';
 
 @Injectable()
 export class ClientService {

@@ -6,6 +6,7 @@ import {
   BookPurchasedByClientModel,
   ClientModel,
   ClientWithSalesCountModel,
+  ClientWithSalesCountRaw,
   CreateClientModel,
   FilterClientsModel,
   GetClientBooksInput,
@@ -88,7 +89,7 @@ export class ClientRepository {
     const qb = this.buildClientsWithSalesCountQuery(input);
 
     const [entities, totalCount] = await qb.getManyAndCount();
-    const raw = await qb.getRawMany();
+    const raw = await qb.getRawMany<ClientWithSalesCountRaw>();
 
     const clients = this.mapClientsWithSalesCount(entities, raw);
 
@@ -171,7 +172,7 @@ export class ClientRepository {
   }
   private mapClientsWithSalesCount(
     entities: ClientEntity[],
-    raw: any[],
+    raw: ClientWithSalesCountRaw[],
   ): ClientWithSalesCountModel[] {
     return entities.map((entity, index) => ({
       client: {

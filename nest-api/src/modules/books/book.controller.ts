@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { CreateBookDto, GetBooksDto, UpdateBookDto } from './book.dto';
 import {
-  GetBooksModel,
   GetBooksWithNumberOfClientsModel,
   ListOfClientsByBookModel,
 } from './book.model';

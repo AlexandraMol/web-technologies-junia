@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { SaleService } from './sale.service';
 import { CreateSaleDto } from './sale.dto';
 

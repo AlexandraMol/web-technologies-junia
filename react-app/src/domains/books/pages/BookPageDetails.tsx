@@ -39,8 +39,8 @@ export function BookPageDetails(): ReactElement {
     <BookDetails
       book={book}
       numberOfClients={numberOfClients}
-      buyers={buyers}       
-      clients={clients}     
+      buyers={buyers}
+      clients={clients}
       onCreateSale={createSale}
       onUpdate={updateBook}
     />

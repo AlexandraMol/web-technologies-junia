@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios, {AxiosError} from 'axios'
+import axios, { AxiosError } from 'axios'
 import type { BookModel, UpdateBookModel } from '../BookModel'
 import type { ClientModel } from '../../clients/ClientModel'
 import type { CreateSaleInput } from '../components/CreateSaleModal'
@@ -38,9 +38,7 @@ export const useBookDetailsProvider = () => {
 
     // clients who bought this book (shopping history)
     const buyersPromise = axios
-      .get<BookClientsResponse>(
-        `http://localhost:3000/books/${bookId}/clients`,
-      )
+      .get<BookClientsResponse>(`http://localhost:3000/books/${bookId}/clients`)
       .then(res => {
         setBuyers(res.data.data)
         setNumberOfClients(res.data.totalCount)
@@ -69,7 +67,7 @@ export const useBookDetailsProvider = () => {
 
   const createSale = (input: CreateSaleInput): void => {
     console.log('[createSale] sending payload:', input)
-  
+
     axios
       .post('http://localhost:3000/sales', input)
       .then(() => {
@@ -89,8 +87,8 @@ export const useBookDetailsProvider = () => {
   return {
     book,
     numberOfClients,
-    buyers,   
-    clients,  
+    buyers,
+    clients,
     isLoading,
     loadBookDetails,
     updateBook,

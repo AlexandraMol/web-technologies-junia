@@ -58,8 +58,7 @@ export function BookDetails({
 
   const { id, title, yearPublished, pictureUrl, author } = book
 
-  const authorId =
-    (book as any).authorId ?? (author as any).id ?? undefined
+  const authorId = (book as any).authorId ?? (author as any).id ?? undefined
 
   const goToAuthor = (): void => {
     if (!authorId) return
@@ -138,7 +137,10 @@ export function BookDetails({
               }}
             />
 
-            <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>
+            <Text
+              type="secondary"
+              style={{ display: 'block', marginBottom: 8 }}
+            >
               {buyersLabel}
             </Text>
 
@@ -288,48 +290,41 @@ export function BookDetails({
           Shopping history
         </Title>
         <List
-  dataSource={buyers}
-  locale={{ emptyText: 'No purchases yet' }}
-  renderItem={buyer => {
-    const anyBuyer = buyer as any
+          dataSource={buyers}
+          locale={{ emptyText: 'No purchases yet' }}
+          renderItem={buyer => {
+            const anyBuyer = buyer as any
 
-    
+            const firstName =
+              anyBuyer.firstName ?? anyBuyer.client?.firstName ?? ''
+            const lastName =
+              anyBuyer.lastName ?? anyBuyer.client?.lastName ?? ''
+            const email = anyBuyer.email ?? anyBuyer.client?.email ?? undefined
 
-    const firstName = anyBuyer.firstName ?? anyBuyer.client?.firstName ?? ''
-    const lastName = anyBuyer.lastName ?? anyBuyer.client?.lastName ?? ''
-    const email =
-      anyBuyer.email ??
-      anyBuyer.client?.email ??
-      undefined
+            return (
+              <List.Item
+                style={{
+                  borderRadius: 12,
+                  border: '1px solid #f0f0f0',
+                  padding: 16,
+                  marginBottom: 12,
+                }}
+              >
+                <div style={{ width: '100%' }}>
+                  <Text strong style={{ display: 'block' }}>
+                    {firstName} {lastName}
+                  </Text>
 
-    return (
-      <List.Item
-        style={{
-          borderRadius: 12,
-          border: '1px solid #f0f0f0',
-          padding: 16,
-          marginBottom: 12,
-        }}
-      >
-        <div style={{ width: '100%' }}>
-          <Text strong style={{ display: 'block' }}>
-            {firstName} {lastName}
-          </Text>
-
-          {email && (
-            <Text type="secondary" style={{ display: 'block' }}>
-              {email}
-            </Text>
-          )}
-
-          
-        </div>
-      </List.Item>
-    )
-  }}
-/>
-
-
+                  {email && (
+                    <Text type="secondary" style={{ display: 'block' }}>
+                      {email}
+                    </Text>
+                  )}
+                </div>
+              </List.Item>
+            )
+          }}
+        />
       </Card>
     </div>
   )

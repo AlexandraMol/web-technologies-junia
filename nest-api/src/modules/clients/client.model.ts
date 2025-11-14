@@ -59,3 +59,7 @@ export type CreateClientModel = {
 };
 
 export type UpdateClientModel = Partial<CreateClientModel>;
+
+export type ClientWithSalesCountRaw = {
+  salesCount: string | null;
+};

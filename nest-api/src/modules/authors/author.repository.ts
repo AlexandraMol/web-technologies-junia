@@ -6,12 +6,13 @@ import {
   FilterAuthorsModel,
   GetAuthorsBooksInput,
   UpdateAuthorModel,
+  AuthorWithBooksCountRaw,
 } from './author.model';
 import { AuthorEntity, AuthorId } from './author.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { BookEntity } from '../books/book.entity';
-import { BookModel, BookModelWithNoAuthor } from '../books/book.model';
+import { BookModelWithNoAuthor } from '../books/book.model';
 import { SaleEntity } from '../sales/sale.entity';
 
 @Injectable()
@@ -82,7 +83,7 @@ export class AuthorRepository {
     const qb = this.buildAuthorsWithNumberOfBooksQuery(input);
 
     const [entities, totalCount] = await qb.getManyAndCount();
-    const raw = await qb.getRawMany();
+    const raw = await qb.getRawMany<AuthorWithBooksCountRaw>();
 
     const authors = this.mapAuthorsWithNumberOfBooks(entities, raw);
 
@@ -171,7 +172,7 @@ export class AuthorRepository {
 
   private mapAuthorsWithNumberOfBooks(
     entities: AuthorEntity[],
-    raw: any[],
+    raw: AuthorWithBooksCountRaw[],
   ): AuthorWithNumberOfBooks[] {
     return entities.map((entity, index) => ({
       author: {

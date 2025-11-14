@@ -22,3 +22,9 @@ import { SaleEntity } from '../sales/sale.entity';
   providers: [BookRepository, BookService, ClientRepository],
 })
 export class BookModule {}
+
+export type BookWithClientsRaw = {
+  author_firstName: string | null;
+  author_lastName: string | null;
+  clientsCount: string | null;
+};

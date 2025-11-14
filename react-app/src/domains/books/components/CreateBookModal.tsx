@@ -39,7 +39,9 @@ export function CreateBookModal({
   }
 
   const isOkDisabled =
-    !title.trim().length || !authorId.trim().length || !yearPublished.trim().length
+    !title.trim().length ||
+    !authorId.trim().length ||
+    !yearPublished.trim().length
 
   const hasAuthors = authors && authors.length > 0
 
@@ -75,7 +77,7 @@ export function CreateBookModal({
               onChange={value => setAuthorId(value)}
               options={authors!.map(a => ({
                 label: `${a.author.firstName} ${a.author.lastName}`,
-                value: a.author.id, 
+                value: a.author.id,
               }))}
               showSearch
               optionFilterProp="label"

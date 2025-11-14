@@ -166,8 +166,8 @@ function App() {
               {key === 'sale' ? (
                 <CreateGlobalSaleModal
                   authors={authors}
-                  books={plainBooks}     
-                  clients={plainClients} 
+                  books={plainBooks}
+                  clients={plainClients}
                   onCreateSale={createSale}
                 />
               ) : (
