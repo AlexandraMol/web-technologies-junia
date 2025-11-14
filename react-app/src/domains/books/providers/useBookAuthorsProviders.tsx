@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import type { BookExtendedModel } from '../BookModel'
+import type { BookModel } from '../BookModel'
 import axios from 'axios'
 
 export const useBookAuthorsProviders = () => {
-  const [authors, setAuthors] = useState<BookExtendedModel['author'][]>([])
+  const [authors, setAuthors] = useState<BookModel['author'][]>([])
 
   const loadAuthors = () => {
     axios
